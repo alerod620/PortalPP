@@ -2,25 +2,6 @@
 <div>
     <!--Stats cards-->
     <div class="row">
-        <DxForm :form-data.sync="formulario" labelMode="outside" labelLocation="left" :readOnly="true">
-            <DxGroupItem item-type="group">
-                <DxItem data-field="Lugar" editor-type="dxTextBox">
-                    <DxLabel alignment="right" />
-                </DxItem>
-                <DxItem data-field="Espec" editor-type="dxTextBox">
-                    <DxLabel text="Especialidad" alignment="right" />
-                </DxItem>
-                <DxItem data-field="Doc" editor-type="dxTextBox">
-                    <DxLabel text="Doctor/a" alignment="right" />
-                </DxItem>
-                <DxItem data-field="Fecha" type="date" editor-type="dxDateBox" :editor-options="{ displayFormat:'dd/MM/yyyy' }">
-                    <DxLabel alignment="right" />
-                </DxItem>
-                <DxItem data-field="Horario" editor-type="dxTextBox">
-                    <DxLabel text="Hora" alignment="right" />
-                </DxItem>
-            </DxGroupItem>
-        </DxForm>
         <div class="col-md-6 col-xl-3" v-for="stats in statsCards" :key="stats.title">
             <stats-card>
                 <div class="icon-big text-center" :class="`icon-${stats.type}`" slot="header">

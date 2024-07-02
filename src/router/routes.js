@@ -11,6 +11,8 @@ import Maps from "@/pages/Maps.vue";
 import Typography from "@/pages/Typography.vue";
 import TableList from "@/pages/TableList.vue";
 import Usuarios from "@/pages/Usuarios.vue";
+import Solicitudes from "@/pages/Solicitudes.vue";
+import Modulos from "@/pages/Modulos.vue";
 
 const routes = [
   {
@@ -57,6 +59,16 @@ const routes = [
         path: "usuarios",
         name: "usuarios",
         component: Usuarios,
+      },
+      {
+        path: "solicitudes",
+        name: "solicitudes",
+        component: Solicitudes,
+      },
+      {
+        path: "modulos",
+        name: "modulos",
+        component: Modulos,
       },
     ],
   },

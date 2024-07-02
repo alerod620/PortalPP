@@ -4,14 +4,16 @@
         <template slot="links">
             <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel" />
             <sidebar-link to="/stats" name="User Profile" icon="ti-user" />
-            <sidebar-link to="/table-list" name="Table List" icon="ti-view-list-alt" />
+            <!-- <sidebar-link to="/table-list" name="Table List" icon="ti-view-list-alt" />
             <sidebar-link to="/typography" name="Typography" icon="ti-text" />
             <sidebar-link to="/icons" name="Icons" icon="ti-pencil-alt2" />
             <sidebar-link to="/maps" name="Map" icon="ti-map" />
-            <sidebar-link to="/notifications" name="Notifications" icon="ti-bell" />
+            <sidebar-link to="/notifications" name="Notifications" icon="ti-bell" /> -->
             <sidebar-link to="/usuarios" name="Usuarios" icon="fa fa-users">
                 <!-- <font-awesome-icon :icon="['fas', 'file-prescription']" class="pr-2" style="font-size: 16px" /> -->
             </sidebar-link>
+            <sidebar-link to="/solicitudes" name="Solicitudes" icon="fa fa-bell" />
+            <sidebar-link to="/modulos" name="Módulos" icon="fa fa-gears" />
         </template>
         <mobile-menu>
             <li class="nav-item">
