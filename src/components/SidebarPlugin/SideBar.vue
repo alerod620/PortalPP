@@ -13,7 +13,7 @@
       <div class="logo">
         <a href="#" class="simple-text">
           <div class="logo-img">
-            <img src="@/assets/img/vue-logo.png" alt="" />
+            <img src="@/assets/img/logo-usac-negro.png" alt="" />
           </div>
           {{ title }}
         </a>
@@ -43,7 +43,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: "Paper Dashboard",
+      default: "Plan de Prestaciones",
     },
     backgroundColor: {
       type: String,

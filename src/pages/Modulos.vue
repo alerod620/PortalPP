@@ -1,24 +1,26 @@
 <template>
 <div>
-    <card title="Solicitudes">
+    <card title="Módulos">
         <div class="row p-2" style="display: grid; place-items: center;" width="100%">
             <DxDataGrid v-bind="DefaultDxGridConfiguration" :data-source="solicitudes" :paging="{enabled: true}" :filter-sync-enabled="true" :headerFilter="{visible:true,allowSearch:true}" :searchPanel="{visible: true }" :height="'100%'" :width="'100%'">
                 <DxSelection mode="single" />
 
                 <DxEditing :allow-updating="true" :allow-adding="true" :allow-deleting="true" mode="popup" :use-icons="true" :confirmDelete="true">
-                    <DxPopup :visible.sync="visualizarSolicitud" :width="'60%'" height="auto" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Verificar cuenta" :showCloseButton="true">
-                        <DxForm :form-data.sync="solicitudActiva" labelMode="floating" :read-only="true">
-                            <DxItem item-type="group" :col-span="2" :col-count="2">
-                                <DxItem data-field="Nombre" editor-type="dxTextBox" />
-                                <DxItem data-field="Ruta" editor-type="dxTextBox" />
-                                <DxItem data-field="NombreIcono" editor-type="dxTextBox" />
-                                <DxItem data-field="Descripcion" editor-type="dxTextArea" />
-                            </DxItem>
-                        </DxForm>
-                    </DxPopup>
+                    <DxPopup  :width="'60%'" height="auto" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Módulo" :showCloseButton="true" />
+
+                    <DxForm :form-data.sync="moduloActivo" label-mode="floating" height="'100%'">
+                        <DxGroupItem :col-count="3">
+                            <DxItem data-field="Nombre" editor-type="dxTextBox" />
+                            <DxItem data-field="Ruta" editor-type="dxTextBox" />
+                            <DxItem data-field="NombreIcono" editor-type="dxTextBox" />
+                        </DxGroupItem>
+                        <DxGroupItem :col-count="1">
+                            <DxItem data-field="Descripcion" editor-type="dxTextArea" :editor-options="{ height: '100px'}" />
+                        </DxGroupItem>
+                    </DxForm>
                 </DxEditing>
 
-                <DxColumn :width="100" type="buttons" :allow-reordering="false">
+                <DxColumn :width=" 100" type="buttons" :allow-reordering="false">
                     <DxButton name="delete" />
                     <DxButton name="edit" />
                 </DxColumn>
@@ -45,17 +47,19 @@ import {
     DxColumn,
     DxEditing,
     DxButton,
-    DxPopup
+    DxPopup,
+    DxForm,
 } from 'devextreme-vue/data-grid'
 
 import {
-    DxForm,
     DxItem,
+    DxGroupItem
 } from 'devextreme-vue/form'
+
 import 'devextreme-vue/text-area'
 
 export default {
-    name: 'Solicitudes',
+    name: 'Modulos',
     components: {
         DxDataGrid,
         DxSelection,
@@ -63,20 +67,21 @@ export default {
         DxEditing,
         DxButton,
         DxPopup,
-        DxItem,
         DxForm,
+        DxItem,
+        DxGroupItem
     },
     data() {
         return {
             DefaultDxGridConfiguration,
             solicitudes: [],
-            solicitudActiva: {},
+            moduloActivo: {},
 
-            visualizarSolicitud: false,
+            visualizarModulo: false,
         }
     },
     methods: {
-        cargarUsuarios() {
+        cargarModulos() {
             this.solicitudes = [{
                     Id: 1,
                     Nombre: 'Solicitudes',
@@ -100,16 +105,9 @@ export default {
                 }
             ]
         },
-
-        verSolicitud(e) {
-            console.log(e)
-            this.solicitudActiva = e
-            console.log(this.solicitudActiva)
-            this.visualizarSolicitud = true
-        }
     },
     mounted() {
-        this.cargarUsuarios()
+        this.cargarModulos()
     }
 }
 </script>

@@ -8,6 +8,7 @@
   >
     <a class="nav-link">
       <slot>
+        <!-- <font-awesome-icon v-if="icon" :icon="['fas', this.icon]" class="fa" /> -->
         <i v-if="icon" :class="icon"></i>
         <p>{{ name }}</p>
       </slot>

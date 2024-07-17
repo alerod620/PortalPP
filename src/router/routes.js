@@ -13,12 +13,14 @@ import TableList from "@/pages/TableList.vue";
 import Usuarios from "@/pages/Usuarios.vue";
 import Solicitudes from "@/pages/Solicitudes.vue";
 import Modulos from "@/pages/Modulos.vue";
+import Menu from "@/pages/Menu.vue";
+import Permisos from "@/pages/Permisos.vue";
 
 const routes = [
   {
     path: "/",
     component: DashboardLayout,
-    redirect: "/dashboard",
+    redirect: "/menu",
     children: [
       {
         path: "dashboard",
@@ -69,6 +71,16 @@ const routes = [
         path: "modulos",
         name: "modulos",
         component: Modulos,
+      },
+      {
+        path: "permisos",
+        name: "permisos",
+        component: Permisos,
+      },
+      {
+        path: "menu",
+        name: "menu",
+        component: Menu,
       },
     ],
   },

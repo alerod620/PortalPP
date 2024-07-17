@@ -55,9 +55,9 @@
       text-align: left;
 
       .logo-img{
-          width: 40px;
+          width: 60px;
           display: inline-block;
-          height: 40px;
+          height: 60px;
           margin-left: 0px;
           margin-right: 10px;
           background: white;
@@ -65,9 +65,24 @@
           text-align: center;
 
         img{
-            max-width: 21px;
+            max-width: 60px;
         }
       }
+
+      .logo-img-usac{
+        width: 40px;
+        display: inline-block;
+        height: 40px;
+        margin-left: 0px;
+        margin-right: 10px;
+        background: black;
+        border-radius: 40px;
+        text-align: center;
+
+      img{
+          max-width: 40px;
+      }
+    }
     }
   }
 

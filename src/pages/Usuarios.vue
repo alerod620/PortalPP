@@ -5,14 +5,16 @@
             <DxDataGrid v-bind="DefaultDxGridConfiguration" :data-source="usuarios" :paging="{enabled: true}" :filter-sync-enabled="true" :headerFilter="{visible:false,allowSearch:true}" :searchPanel="{visible: true }" :height="'100%'" :width="'100%'">
                 <DxSelection mode="single" />
 
-                <DxEditing :allow-updating="true" :allow-adding="true" :allow-deleting="true" mode="popup" :use-icons="true" :confirmDelete="true" />
-
+                <DxEditing :allow-updating="true" :allow-adding="true" :allow-deleting="true" mode="popup" :use-icons="true" :confirmDelete="true">
+                    <DxPopup  :width="'60%'" height="auto" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Usuario" :showCloseButton="true" />
+                </DxEditing>
+                
                 <DxColumn width="auto" data-field="Nombre" data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="Apellido" data-type="string"  alignment="center" />
-                <DxColumn width="auto" data-field="CUI"  data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="Partida"  data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="Plaza"  data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="Registro"  data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="Apellido" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="CUI" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="Partida" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="Plaza" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="Registro" data-type="string" alignment="center" />
             </DxDataGrid>
         </div>
     </card>
@@ -27,7 +29,9 @@ import {
     DxDataGrid,
     DxSelection,
     DxColumn,
-    DxEditing
+    DxEditing,
+    DxPopup,
+    DxForm,
     // DxButton
 } from 'devextreme-vue/data-grid'
 
@@ -37,7 +41,9 @@ export default {
         DxDataGrid,
         DxSelection,
         DxColumn,
-        DxEditing
+        DxEditing,
+        DxPopup,
+        DxForm,
     },
     data() {
         return {
@@ -45,24 +51,35 @@ export default {
             usuarios: []
         }
     },
-    methods:
-    {
-        cargarUsuarios()
-        {
-            this.usuarios = [
-                {
-                    Nombre: 'Juan',
-                    Apellido: 'Perez',
-                    CUI: 1234567980000,
-                    Partida: 123456,
-                    Plaza: 123456,
-                    Registro: 123456
-                }
-            ]
+    methods: {
+        cargarUsuarios() {
+            this.usuarios = [{
+                Nombre: 'Juan',
+                Apellido: 'Perez',
+                CUI: 1234567980000,
+                Partida: 123456,
+                Plaza: 123456,
+                Registro: 123456
+            },
+            {
+                Nombre: 'Pedro',
+                Apellido: 'Sanchez',
+                CUI: 9876543210000,
+                Partida: 654321,
+                Plaza: 321654,
+                Registro: 456254
+            },
+            {
+                Nombre: 'Pablo',
+                Apellido: 'Trejo',
+                CUI: 5748464354313,
+                Partida: 579548,
+                Plaza: 6584897,
+                Registro: 654712
+            }]
         }
     },
-    mounted()
-    {
+    mounted() {
         this.cargarUsuarios()
     }
 }
