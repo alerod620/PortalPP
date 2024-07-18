@@ -1,6 +1,6 @@
 <template>
 <div class="buttons">
-    <div class="p-2 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 div-button" v-for="(item, index) in menu" v-bind:key="index">
+    <div class="p-2 w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4 div-button" v-for="(item, index) in menu" v-bind:key="index">
         <vs-button class="button" color="dark" type="border" @click.native="OpcionSeleccionada(item)" >
             <!-- <div v-if="item.animation==='bf'">
                 <font-awesome-icon :icon="['fas', item.icon]" class="i-size" beat-fade />
@@ -52,7 +52,7 @@ export default ({
                 id: 4,
                 text: "Publicaciones",
                 icon: "newspaper",
-                path: "",
+                path: "/publicaciones",
             } ,
             {
                 id: 5,

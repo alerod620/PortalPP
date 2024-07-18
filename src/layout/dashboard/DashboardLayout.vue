@@ -16,6 +16,7 @@
             <sidebar-link to="/solicitudes" name="Solicitudes" icon="fa fa-bell" />
             <sidebar-link to="/modulos" name="Módulos" icon="fa fa-gears" />
             <sidebar-link to="/permisos" name="Permisos" icon="fa fa-key" />
+            <sidebar-link to="/publicaciones" name="Publicaciones" icon="fa fa-newspaper-o" />
         </template>
         <mobile-menu>
             <li class="nav-item">

@@ -36,6 +36,7 @@ library.add(fab);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 import 'devextreme/dist/css/dx.light.css';
+import './assets/tailwind.css'
 
 Vue.use(PaperDashboard);
 
@@ -44,3 +45,4 @@ new Vue({
   router,
   render: (h) => h(App),
 }).$mount("#app");
+

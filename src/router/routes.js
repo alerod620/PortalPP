@@ -15,6 +15,7 @@ import Solicitudes from "@/pages/Solicitudes.vue";
 import Modulos from "@/pages/Modulos.vue";
 import Menu from "@/pages/Menu.vue";
 import Permisos from "@/pages/Permisos.vue";
+import Publicaciones from "@/pages/Publicaciones.vue";
 
 const routes = [
   {
@@ -81,6 +82,11 @@ const routes = [
         path: "menu",
         name: "menu",
         component: Menu,
+      },
+      {
+        path: "publicaciones",
+        name: "publicaciones",
+        component: Publicaciones,
       },
     ],
   },
