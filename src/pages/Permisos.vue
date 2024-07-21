@@ -8,7 +8,7 @@
                 <DxEditing :allow-updating="true" :allow-adding="true" :allow-deleting="true" mode="popup" :use-icons="true" :confirmDelete="true">
                     <DxPopup :width="'60%'" height="auto" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Módulo" :showCloseButton="true" />
 
-                    <DxForm :form-data.sync="moduloActivo" label-mode="floating" height="'100%'" :col-span="1">
+                    <DxForm v-model:form-data="moduloActivo" label-mode="floating" height="'100%'" :col-span="1">
                         <DxGroupItem>
                             <DxGroupItem :col-span="2">
                                 <DxItem data-field="Nombre" editor-type="dxTextBox" />

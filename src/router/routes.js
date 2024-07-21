@@ -16,6 +16,10 @@ import Modulos from "@/pages/Modulos.vue";
 import Menu from "@/pages/Menu.vue";
 import Permisos from "@/pages/Permisos.vue";
 import Publicaciones from "@/pages/Publicaciones.vue";
+import Publicacion from "@/pages/Publicacion.vue";
+import Recibos from "@/pages/Recibos.vue";
+import DeclaracionBeneficiarios from "@/pages/DeclaracionBeneficiarios.vue";
+import Inicio from "@/pages/InicioAfiliado.vue";
 
 const routes = [
   {
@@ -87,6 +91,26 @@ const routes = [
         path: "publicaciones",
         name: "publicaciones",
         component: Publicaciones,
+      },
+      {
+        path: "publicacion",
+        name: "publicacion",
+        component: Publicacion,
+      },
+      {
+        path: "recibos",
+        name: "recibos",
+        component: Recibos,
+      },
+      {
+        path: "declaracionbeneficiarios",
+        name: "declaracionbeneficiarios",
+        component: DeclaracionBeneficiarios,
+      },
+      {
+        path: "inicio",
+        name: "inicio",
+        component: Inicio,
       },
     ],
   },

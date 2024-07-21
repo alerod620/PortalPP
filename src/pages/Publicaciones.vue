@@ -1,23 +1,20 @@
 <template>
 <div>
-    <card title="Publicaciones">
-        <div class="m-4 flex">
-            <div class="m-4 w-full md:w-1/3 lg:w-1/3 xl:w-1/3" v-for="(item, index) in publicaciones" v-bind:key="index">
+    <card v-if="vista == 0" title="Publicaciones">
+        <div class="displayTail">
+            <div class="p-2 w-full md:w-1/2 lg:w-1/2 xl:w-1/3" v-for="(item, index) in publicaciones" v-bind:key="index">
                 <card class="publicaciones" :w-title="item.title">
                     <span>{{ item.title }}</span>
-                    <div class="m-4 flex">
-                        <div class="w-full w-1/3">
-                            <vs-button color="primary" type="filled" width="100px">
-                                <span>Ver</span>
-                            </vs-button>
-                            <vs-button color="success" type="filled">
-                                <span>Editar</span>
-                            </vs-button>
-                            <vs-button color="danger" type="filled">
-                                <span>Eliminar</span>
-                            </vs-button>
-                        </div>
-
+                    <div class="displayTail">
+                        <vs-button class="m-2 botonesEditarPublicaciones w-full xl:w-1/3" color="primary" type="filled" @click.native="verPublicacion">
+                            <span>Ver</span>
+                        </vs-button>
+                        <vs-button class="m-2 botonesEditarPublicaciones w-full lg:w-1/3 xl:w-1/3" color="success" type="filled" @click.native="editarPublicacion">
+                            <span>Editar</span>
+                        </vs-button>
+                        <vs-button class="m-2 botonesEditarPublicaciones w-full lg:w-1/3 xl:w-1/3" color="danger" type="filled">
+                            <span>Eliminar</span>
+                        </vs-button>
                     </div>
                 </card>
 
@@ -26,6 +23,9 @@
 
     </card>
 
+    <div v-if="vista !== 0">
+        <Publicacion :edicion="vista == 1 ? false : true"  @cancelar="() =>{ this.vista = 0}"/> 
+    </div>
 </div>
 </template>
 
@@ -51,6 +51,8 @@ import {
 
 import 'devextreme-vue/text-area'
 
+import Publicacion from './Publicacion.vue'
+
 export default {
     name: 'Modulos',
     components: {
@@ -62,7 +64,8 @@ export default {
         DxPopup,
         DxForm,
         DxItem,
-        DxGroupItem
+        DxGroupItem,
+        Publicacion
     },
     data() {
         return {
@@ -70,21 +73,32 @@ export default {
             solicitudes: [],
             moduloActivo: {},
 
-            visualizarModulo: false,
+            vista: 0, //Variable para determinar que ver
 
             publicaciones: [{
                 title: 'Publicacion 1',
-                image: ''
+                image: '',
+                value: ''
             }, {
                 title: 'Publicacion 2',
-                image: ''
+                image: '',
+                value: ''
             }, {
                 title: 'Publicacion 3',
-                image: ''
+                image: '',
+                value: ''
             }, ]
         }
     },
     methods: {
+        verPublicacion() {
+            this.vista = 1
+            // this.$router.push('/publicacion')
+        },
+        editarPublicacion()
+        {
+            this.vista = 2
+        },
         cargarModulos() {
             this.solicitudes = [{
                     Id: 1,
@@ -120,5 +134,15 @@ export default {
 .publicaciones {
     border: solid !important;
     border-color: black;
+}
+
+.botonesEditarPublicaciones {
+    max-width: 70px !important;
+}
+
+.displayTail {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 </style>

@@ -17,6 +17,9 @@
             <sidebar-link to="/modulos" name="Módulos" icon="fa fa-gears" />
             <sidebar-link to="/permisos" name="Permisos" icon="fa fa-key" />
             <sidebar-link to="/publicaciones" name="Publicaciones" icon="fa fa-newspaper-o" />
+            <sidebar-link to="/recibos" name="Recibos" icon="fa fa-check-square" />
+            <sidebar-link to="/declaracionbeneficiarios" name="Beneficiarios" icon="fa fa-child" />
+            <sidebar-link to="/inicio" name="Inicio" icon="fa fa-child" />
         </template>
         <mobile-menu>
             <li class="nav-item">

@@ -25,8 +25,8 @@
         </div>
     </card>
 
-    <DxPopup :visible.sync="visualizarSolicitud" :width="'60%'" :height="'50%'" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Verificar cuenta" :showCloseButton="true">
-        <DxForm :form-data.sync="solicitudActiva" labelMode="floating" :read-only="true">
+    <DxPopup v-model:visible="visualizarSolicitud" :width="'60%'" height="auto" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Verificar cuenta" :showCloseButton="true">
+        <DxForm v-model:form-data="solicitudActiva" labelMode="floating" :read-only="true">
             <DxItem item-type="group" :col-span="2" :col-count="2">
                 <DxItem data-field="Nombre" editor-type="dxTextBox" />
                 <DxItem data-field="Apellido" editor-type="dxTextBox" />

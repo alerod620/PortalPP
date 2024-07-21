@@ -6,17 +6,19 @@
                 <DxSelection mode="single" />
 
                 <DxEditing :allow-updating="true" :allow-adding="true" :allow-deleting="true" mode="popup" :use-icons="true" :confirmDelete="true">
-                    <DxPopup  :width="'60%'" height="auto" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Módulo" :showCloseButton="true" />
+                    <DxPopup :width="'60%'" height="auto" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Módulo" :showCloseButton="true" />
 
-                    <DxForm :form-data.sync="moduloActivo" label-mode="floating" height="'100%'">
-                        <DxGroupItem :col-count="3">
-                            <DxItem data-field="Nombre" editor-type="dxTextBox" />
-                            <DxItem data-field="Ruta" editor-type="dxTextBox" />
-                            <DxItem data-field="NombreIcono" editor-type="dxTextBox" />
-                        </DxGroupItem>
-                        <DxGroupItem :col-count="1">
-                            <DxItem data-field="Descripcion" editor-type="dxTextArea" :editor-options="{ height: '100px'}" />
-                        </DxGroupItem>
+                    <DxForm v-model:form-data="moduloActivo" label-mode="floating" height="'100%'" :col-count="1">
+                        <!-- <DxGroupItem> -->
+                            <DxGroupItem :col-count="3">
+                                <DxItem data-field="Nombre" editor-type="dxTextBox" />
+                                <DxItem data-field="Ruta" editor-type="dxTextBox" />
+                                <DxItem data-field="NombreIcono" editor-type="dxTextBox" />
+                            </DxGroupItem>
+                            <DxGroupItem :col-count="1">
+                                <DxItem data-field="Descripcion" editor-type="dxTextArea" :editor-options="{ height: '100px'}" />
+                            </DxGroupItem>
+                        <!-- </DxGroupItem> -->
                     </DxForm>
                 </DxEditing>
 

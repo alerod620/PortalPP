@@ -70,13 +70,13 @@ export default ({
                 id: 7,
                 text: "Recibos",
                 icon: "receipt",
-                path: "",
+                path: "/recibos",
             },
             {
                 id: 8,
                 text: "Declaración de beneficiarios",
                 icon: "child-reaching",
-                path: "",
+                path: "/declaracionbeneficiarios",
             } ]
         }
     },
