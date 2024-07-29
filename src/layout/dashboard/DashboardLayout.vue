@@ -19,7 +19,8 @@
             <sidebar-link to="/publicaciones" name="Publicaciones" icon="fa fa-newspaper-o" />
             <sidebar-link to="/recibos" name="Recibos" icon="fa fa-check-square" />
             <sidebar-link to="/declaracionbeneficiarios" name="Beneficiarios" icon="fa fa-child" />
-            <sidebar-link to="/inicio" name="Inicio" icon="fa fa-child" />
+            <sidebar-link to="/inicio" name="Inicio" icon="fa fa-tachometer" />
+            <sidebar-link to="/landing" name="Landing page" icon="fa fa-home" />
         </template>
         <mobile-menu>
             <li class="nav-item">

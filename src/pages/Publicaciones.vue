@@ -9,10 +9,10 @@
                         <vs-button class="m-2 botonesEditarPublicaciones w-full xl:w-1/3" color="primary" type="filled" @click.native="verPublicacion">
                             <span>Ver</span>
                         </vs-button>
-                        <vs-button class="m-2 botonesEditarPublicaciones w-full lg:w-1/3 xl:w-1/3" color="success" type="filled" @click.native="editarPublicacion">
+                        <vs-button v-if="modulo != 2" class="m-2 botonesEditarPublicaciones w-full lg:w-1/3 xl:w-1/3" color="success" type="filled" @click.native="editarPublicacion">
                             <span>Editar</span>
                         </vs-button>
-                        <vs-button class="m-2 botonesEditarPublicaciones w-full lg:w-1/3 xl:w-1/3" color="danger" type="filled">
+                        <vs-button v-if="modulo != 2" class="m-2 botonesEditarPublicaciones w-full lg:w-1/3 xl:w-1/3" color="danger" type="filled">
                             <span>Eliminar</span>
                         </vs-button>
                     </div>
@@ -24,7 +24,7 @@
     </card>
 
     <div v-if="vista !== 0">
-        <Publicacion :edicion="vista == 1 ? false : true"  @cancelar="() =>{ this.vista = 0}"/> 
+        <Publicacion :edicion="vista == 1 ? false : true" @cancelar="() =>{ this.vista = 0}" />
     </div>
 </div>
 </template>
@@ -67,6 +67,9 @@ export default {
         DxGroupItem,
         Publicacion
     },
+    props: {
+        modulo: null // Indica desde donde se está invocando al componente, para determinar que acciones mostrar
+    },
     data() {
         return {
             DefaultDxGridConfiguration,
@@ -87,7 +90,7 @@ export default {
                 title: 'Publicacion 3',
                 image: '',
                 value: ''
-            }, ]
+            }, ],
         }
     },
     methods: {
@@ -95,8 +98,7 @@ export default {
             this.vista = 1
             // this.$router.push('/publicacion')
         },
-        editarPublicacion()
-        {
+        editarPublicacion() {
             this.vista = 2
         },
         cargarModulos() {

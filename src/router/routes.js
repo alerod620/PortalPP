@@ -20,6 +20,7 @@ import Publicacion from "@/pages/Publicacion.vue";
 import Recibos from "@/pages/Recibos.vue";
 import DeclaracionBeneficiarios from "@/pages/DeclaracionBeneficiarios.vue";
 import Inicio from "@/pages/InicioAfiliado.vue";
+import Landing from "@/pages/Landingpage.vue";
 
 const routes = [
   {
@@ -111,6 +112,11 @@ const routes = [
         path: "inicio",
         name: "inicio",
         component: Inicio,
+      },
+      {
+        path: "landing",
+        name: "landing",
+        component: Landing,
       },
     ],
   },
