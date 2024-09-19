@@ -29,20 +29,33 @@ import { fab } from '@fortawesome/free-brands-svg-icons'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+
+// Vuesax Component Framework
+import Vuesax from 'vuesax'
+// import 'material-icons/iconfont/material-icons.css' //Material Icons
+import 'vuesax/dist/vuesax.css'; // Vuesax
+
+import 'devextreme/dist/css/dx.light.css';
+
+import './input.css'
+
 library.add(fas);
 library.add(far);
 library.add(fab);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
-import 'devextreme/dist/css/dx.light.css';
+
+
+import config from 'devextreme/core/config';
 import './assets/tailwind.css'
 
+
 Vue.use(PaperDashboard);
+Vue.use(Vuesax)
 
 /* eslint-disable no-new */
 new Vue({
   router,
   render: (h) => h(App),
 }).$mount("#app");
-
