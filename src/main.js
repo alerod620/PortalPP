@@ -16,6 +16,8 @@
 import Vue from "vue";
 import App from "./App";
 import router from "./router/index";
+import axios from 'axios';
+import VueAxios from 'vue-axios';
 
 import PaperDashboard from "./plugins/paperDashboard";
 import "vue-notifyjs/themes/default.css";
@@ -48,14 +50,26 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 
 import config from 'devextreme/core/config';
+
+import esMessages from "devextreme/localization/messages/es.json";
+import { locale, loadMessages } from "devextreme/localization";
+
+
 import './assets/tailwind.css'
 
 
 Vue.use(PaperDashboard);
 Vue.use(Vuesax)
+Vue.use(VueAxios, axios)
 
 /* eslint-disable no-new */
 new Vue({
   router,
   render: (h) => h(App),
+
+  created()
+  {
+    loadMessages(esMessages);
+    locale(navigator.language);
+  },
 }).$mount("#app");

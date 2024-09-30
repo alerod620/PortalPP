@@ -6,9 +6,9 @@
                 <DxSelection mode="single" />
 
                 <DxEditing :allow-updating="true" :allow-adding="true" :allow-deleting="true" mode="popup" :use-icons="true" :confirmDelete="true">
-                    <DxPopup  :width="'60%'" height="auto" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Usuario" :showCloseButton="true" />
+                    <DxPopup :width="'60%'" height="auto" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Usuario" :showCloseButton="true" />
                 </DxEditing>
-                
+
                 <DxColumn width="auto" data-field="Nombre" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="Apellido" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="CUI" data-type="string" alignment="center" />
@@ -34,6 +34,7 @@ import {
     DxForm,
     // DxButton
 } from 'devextreme-vue/data-grid'
+import axios from 'axios'
 
 export default {
     name: 'Usuarios',
@@ -53,30 +54,46 @@ export default {
     },
     methods: {
         cargarUsuarios() {
-            this.usuarios = [{
-                Nombre: 'Juan',
-                Apellido: 'Perez',
-                CUI: 1234567980000,
-                Partida: 123456,
-                Plaza: 123456,
-                Registro: 123456
-            },
-            {
-                Nombre: 'Pedro',
-                Apellido: 'Sanchez',
-                CUI: 9876543210000,
-                Partida: 654321,
-                Plaza: 321654,
-                Registro: 456254
-            },
-            {
-                Nombre: 'Pablo',
-                Apellido: 'Trejo',
-                CUI: 5748464354313,
-                Partida: 579548,
-                Plaza: 6584897,
-                Registro: 654712
-            }]
+            axios({
+                    method: 'post',
+                    url: 'http://localhost:3000/api/Usuario',
+                    data: {
+                        Opcion: 1,
+                        Id: 1
+                    },
+                })
+                .then((resp) => {
+                    if(resp.data.length > 0)
+                {
+                    this.usuarios = resp.data
+                }
+                });
+
+            // this.usuarios = [{
+            //         Nombre: 'Juan',
+            //         Apellido: 'Perez',
+            //         CUI: 1234567980000,
+            //         Partida: 123456,
+            //         Plaza: 123456,
+            //         Registro: 123456
+            //     },
+            //     {
+            //         Nombre: 'Pedro',
+            //         Apellido: 'Sanchez',
+            //         CUI: 9876543210000,
+            //         Partida: 654321,
+            //         Plaza: 321654,
+            //         Registro: 456254
+            //     },
+            //     {
+            //         Nombre: 'Pablo',
+            //         Apellido: 'Trejo',
+            //         CUI: 5748464354313,
+            //         Partida: 579548,
+            //         Plaza: 6584897,
+            //         Registro: 654712
+            //     }
+            // ]
         }
     },
     mounted() {

@@ -138,7 +138,7 @@ export default {
                 },
                 {
                     Id: 3,
-                    Nombre: 'Trabajdor',
+                    Nombre: 'Trabajador',
                     Descripcion: 'Usuario que aporta al plan de prestaciones',
                 },
                 {
