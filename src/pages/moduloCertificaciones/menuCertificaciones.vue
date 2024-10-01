@@ -138,6 +138,6 @@ hr {
     margin-right: 2%;
     border: 1px solid #0B355B;
     border-radius: 15px; /* Esquinas redondeadas, ajusta el valor para más o menos redondeo */
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5); 
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5); 
 }
 </style>

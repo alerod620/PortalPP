@@ -130,9 +130,9 @@ const routes = [
       },
       {
         path: "menuCertificaciones",
-        name: "",
+        name: "menuCertificaciones",
         component: menuCertificaciones,
-      },
+      }
     ],
   },
   { path: "*", component: NotFound },
