@@ -6,10 +6,10 @@
     v-bind="$attrs"
     tag="li"
   >
-    <a class="nav-link">
+    <a class="nav-link flex">
       <slot>
-        <!-- <font-awesome-icon v-if="icon" :icon="['fas', this.icon]" class="fa" /> -->
-        <i v-if="icon" :class="icon"></i>
+        <font-awesome-icon v-if="icon" :icon="['fas', icon]" class="fa pt-1" />
+        <!-- <i v-if="icon" :class="icon"></i> -->
         <p>{{ name }}</p>
       </slot>
     </a>

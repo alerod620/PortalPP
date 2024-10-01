@@ -4,25 +4,23 @@
           <template slot="links">
               <!-- <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel" /> -->
               <!-- <sidebar-link to="/stats" name="User Profile" icon="ti-user" /> -->
-              <sidebar-link to="/menu" name="Menu" icon="fa fa-bars" />
+              <sidebar-link to="/menu" name="Menu" icon="bars" />
               <!-- <sidebar-link to="/table-list" name="Table List" icon="ti-view-list-alt" />
               <sidebar-link to="/typography" name="Typography" icon="ti-text" />
               <sidebar-link to="/icons" name="Icons" icon="ti-pencil-alt2" />
               <sidebar-link to="/maps" name="Map" icon="ti-map" />
               <sidebar-link to="/notifications" name="Notifications" icon="ti-bell" /> -->
-              <sidebar-link to="/usuarios" name="Usuarios" icon="fa fa-users">
+              <sidebar-link to="/usuarios" name="Usuarios" icon="users" />
                   <!-- <font-awesome-icon :icon="['fas', 'file-prescription']" class="pr-2" style="font-size: 16px" /> -->
-              </sidebar-link>
-              <sidebar-link to="/solicitudes" name="Solicitudes" icon="fa fa-bell" />
-              <sidebar-link to="/modulos" name="Módulos" icon="fa fa-gears" />
-              <sidebar-link to="/permisos" name="Permisos" icon="fa fa-key" />
-              <sidebar-link to="/publicaciones" name="Publicaciones" icon="fa fa-newspaper-o" />
-              <sidebar-link to="/recibos" name="Recibos" icon="fa fa-check-square" />
-              <sidebar-link to="/declaracionbeneficiarios" name="Beneficiarios" icon="fa fa-child" />
-              <sidebar-link to="/inicio" name="Inicio" icon="fa fa-tachometer" />
-              <sidebar-link to="/landing" name="Landing page" icon="fa fa-home" />
-              <sidebar-link to="/menuCertificaciones" name="Menu Certificaciones" icon="fa fa-grip" />
-              
+              <sidebar-link to="/solicitudes" name="Solicitudes" icon="bell" />
+              <sidebar-link to="/modulos" name="Módulos" icon="gears" />
+              <sidebar-link to="/permisos" name="Permisos" icon="key" />
+              <sidebar-link to="/roles" name="Roles" icon="user-gear" />
+              <sidebar-link to="/publicaciones" name="Publicaciones" icon="newspaper" />
+              <sidebar-link to="/recibos" name="Recibos" icon="check-square" />
+              <sidebar-link to="/declaracionbeneficiarios" name="Beneficiarios" icon="child" />
+              <sidebar-link to="/inicio" name="Inicio" icon="tachometer" />
+              <sidebar-link to="/landing" name="Landing page" icon="home" />
           </template>
           <mobile-menu>
               <li class="nav-item">
