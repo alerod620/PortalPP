@@ -22,6 +22,10 @@ import DeclaracionBeneficiarios from "@/pages/DeclaracionBeneficiarios.vue";
 import Inicio from "@/pages/InicioAfiliado.vue";
 import Landing from "@/pages/Landingpage.vue";
 
+//para el manejo del modulo de certificaciones
+import menuCertificaciones from "@/pages/moduloCertificaciones/menuCertificaciones.vue";
+
+
 const routes = [
   {
     path: "/",
@@ -117,6 +121,11 @@ const routes = [
         path: "landing",
         name: "landing",
         component: Landing,
+      },
+      {
+        path: "menuCertificaciones",
+        name: "",
+        component: menuCertificaciones,
       },
     ],
   },
