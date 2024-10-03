@@ -2,7 +2,7 @@
 <div>
     <card title="Módulos">
         <div class="row p-2" style="display: grid; place-items: center;" width="100%">
-            <DxDataGrid v-bind="DefaultDxGridConfiguration" :data-source="modulos" :paging="{enabled: true}" :filter-sync-enabled="true" :searchPanel="{ visible: true }" :height="'100%'" :width="'100%'" :on-row-inserting="crearModulo" :on-row-inserted="cargarModulos" :on-row-updating="editarModulo" :on-row-updated="cargarModulos">
+            <DxDataGrid v-bind="DefaultDxGridConfiguration" :data-source="modulos" :paging="{enabled: true}" :filter-sync-enabled="true" :searchPanel="{ visible: true }" :height="'100%'" :width="'100%'" :on-row-inserting="crearModulo" :on-row-inserted="cargarModulos" :on-row-updating="editarModulo" :on-row-updated="cargarModulos" :on-row-removing="eliminarModulo" :on-row-removed="cargarModulos" @init-new-row="onInitNuevoRegistro" @editing-start="onEditarRegistro">
                 <DxSelection mode="single" />
 
                 <DxEditing :allow-updating="true" :allow-adding="true" :allow-deleting="true" mode="popup" :use-icons="true" :confirmDelete="true">
@@ -14,10 +14,10 @@
                             <DxItem data-field="Nombre" editor-type="dxTextBox" />
                             <DxItem data-field="Ruta" editor-type="dxTextBox" />
                             <DxItem data-field="Icono" editor-type="dxTextBox" />
-                            <DxItem data-field="Estado" editor-type="dxRadioGroup" :editor-options="{ items: estados, displayExpr:'text', valueExpr: 'id', layout:'horizontal' }" />
+                            <DxItem data-field="Estado" editor-type="dxRadioGroup" :visible="mostrarEstado" :editor-options="{ items: estados, displayExpr:'text', valueExpr: 'id', layout:'horizontal' }" />
                         </DxGroupItem>
                         <DxGroupItem :col-count="1">
-                            <DxItem data-field="Descripcion" editor-type="dxTextArea" :editor-options="{ height: '100px'}" />
+                            <DxItem data-field="Descripcion" editor-type="dxTextArea" :editor-options="{ height: '100px' }" />
                         </DxGroupItem>
                         <!-- </DxGroupItem> -->
                     </DxForm>
@@ -31,7 +31,7 @@
                 <DxColumn width="10%" data-field="Nombre" data-type="string" alignment="center" />
                 <DxColumn width="20%" data-field="Ruta" data-type="string" alignment="center" />
                 <DxColumn width="100px" data-field="Icono" data-type="string" alignment="center" />
-                <DxColumn width="100px" data-field="Estado" data-type="string" alignment="center" :customize-text="customizeText" />
+                <DxColumn width="100px" data-field="EstadoDescripcion" caption="Estado" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="Descripcion" caption="Descripción" data-type="string" alignment="center" />
             </DxDataGrid>
         </div>
@@ -96,6 +96,8 @@ export default {
                 id: 2,
                 text: 'Inactivo'
             }, ],
+
+            mostrarEstado: false,
         }
     },
     methods: {
@@ -108,7 +110,6 @@ export default {
                     Opcion: 1
                 })
                 .then(resp => {
-                    console.log(resp.data)
                     if (resp.data.length > 0) {
                         this.modulos = resp.data
                     }
@@ -116,7 +117,6 @@ export default {
         },
 
         crearModulo(e) {
-            console.log(e)
             axios.post('http://localhost:3000/api/Modulos', {
                     Opcion: 2,
                     Nombre: e.data.Nombre,
@@ -149,6 +149,28 @@ export default {
                     reject(err.descripcion ? err.descripcion : err)
                 })
             })
+        },
+
+        eliminarModulo(e) {
+            e.cancel = new Promise((resolve, reject) => {
+                this.axios.post('http://localhost:3000/api/Modulos', {
+                    Opcion: 4,
+                    Id: e.data.IdModulo
+                }).then((resp) => {
+                    resp.data[0].codigo == 0 ? resolve(false) : resolve(true)
+                }).catch((err) => {
+                    reject(err.descripcion ? err.descripcion : err)
+                })
+            })
+        },
+
+        onInitNuevoRegistro(e) {
+            this.mostrarEstado = false
+        },
+
+        onEditarRegistro(e)
+        {
+            this.mostrarEstado = true
         }
     },
     mounted() {
