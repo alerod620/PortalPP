@@ -101,10 +101,6 @@ export default {
         }
     },
     methods: {
-        customizeText(e) {
-            e.valueText = e.value == 1 ? 'Activo' : 'Inactivo'
-            return e.valueText
-        },
         cargarModulos() {
             axios.post('http://localhost:3000/api/Modulos', {
                     Opcion: 1
