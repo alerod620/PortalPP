@@ -1,20 +1,21 @@
 <template>
-<div id="cateteres">
+<div>
     <card title="Permisos">
         <div class="row p-2" style="display: grid; place-items: center;" width="100%">
-            <DxDataGrid v-bind="DefaultDxGridConfiguration" :data-source="roles" :paging="{enabled: true}" :filter-sync-enabled="true" :headerFilter="{ visible: true, allowSearch: true }" :searchPanel="{ visible: true }" :height="'100%'" :width="'100%'" :on-row-inserting="crearRol" :on-row-inserted="cargarRol" :on-row-updating="editarRol" :on-row-updated="cargarRol" :on-row-removing="eliminarRol" :on-row-removed="cargarRol">
+            <DxDataGrid v-bind="DefaultDxGridConfiguration" :data-source="roles" :paging="{enabled: true}" :filter-sync-enabled="true" :headerFilter="{ visible: true, allowSearch: true }" :searchPanel="{ visible: true }" :height="'100%'" :width="'100%'" :on-row-inserting="crearRol" :on-row-inserted="cargarRol" :on-row-updating="editarRol" :on-row-updated="cargarRol" :on-row-removing="eliminarRol" :on-row-removed="cargarRol" @editing-start="onEditarRegistro">
                 <DxSelection mode="single" />
 
                 <DxEditing :allow-updating="true" :allow-adding="true" :allow-deleting="true" mode="popup" :use-icons="true" :confirmDelete="true">
-                    <DxPopup :width="'20%'" height="auto" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Módulo" :showCloseButton="true" />
+                    <DxPopup :width="'50%'" height="auto" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Rol" :showCloseButton="true" />
 
-                    <DxForm :form-data.sync="moduloActivo" label-mode="floating" height="'100%'">
-                            <DxGroupItem :col-span="2">
-                                <DxItem data-field="NombreRol" editor-type="dxTextBox">
-                                    <DxLabel test="Nombre" />
-                                </DxItem>   
-                                <DxItem data-field="Descripcion" editor-type="dxTextArea" :editor-options="{ height: '100px'}" />
-                            </DxGroupItem>
+                    <DxForm :form-data.sync="fomulario" label-mode="floating" height="'100%'" :col-count="2">
+                        <DxGroupItem>
+                            <DxItem data-field="NombreRol" editor-type="dxTextBox">
+                                <DxLabel test="Nombre" />
+                            </DxItem>
+                            <DxItem data-field="Descripcion" editor-type="dxTextArea" :editor-options="{ height: '100px'}" />
+                        </DxGroupItem>
+                        <DxItem template="lista" />
                     </DxForm>
                 </DxEditing>
 
@@ -25,13 +26,22 @@
                 <DxColumn width="auto" data-field="IdRol" caption="Id" data-type="string" alignment="center" :form-item="{ visible: false }" />
                 <DxColumn width="auto" data-field="NombreRol" caption="Nombre" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="Descripcion" caption="Descripción" data-type="string" alignment="center" />
+
+                <template #lista="{}">
+                    <div>
+                        <DxList :ref="listaPermisos" height="160px" :selected-items="permisosCargados" :data-source="permisos" width="auto" :show-selection-controls="true" :selection-mode="'multiple'" :select-all-mode="'allPages'" :select-by-click="true" :search-enabled="true" search-expr="text" />
+                    </div>
+                </template>
             </DxDataGrid>
+        </div>
+        <div>
+            <span class="caption">Selected IDs: </span>
+            <span>{{ permisosSeleccionados.join(", ") }}</span>
         </div>
     </card>
 </div>
 </template>
 
-    
 <script>
 import {
     DefaultDxGridConfiguration
@@ -56,10 +66,13 @@ import {
 import 'devextreme-vue/text-area'
 
 import {
-    DxScrollView
-} from 'devextreme-vue/scroll-view';
+    DxList
+} from 'devextreme-vue/list';
+
+import ArrayStore from 'devextreme/data/array_store';
 
 import axios from 'axios'
+const listaPermisos = 'listaPermisos'
 
 export default {
     name: 'Roles',
@@ -74,17 +87,21 @@ export default {
         DxItem,
         DxGroupItem,
         DxLabel,
-        DxScrollView
+        DxList,
     },
     data() {
         return {
             DefaultDxGridConfiguration,
+            listaPermisos,
             solicitudes: [],
-            moduloActivo: {},
+            fomulario: {},
 
             visualizarModulo: false,
 
-            roles: []
+            roles: [],
+            permisos: null,
+            permisosSeleccionados: [],
+            permisosCargados: []
         }
     },
     methods: {
@@ -100,10 +117,12 @@ export default {
         },
 
         crearRol(e) {
+            let permisos = this.listadoPermisos.option("selectedItems").map(permiso => permiso.id)
             axios.post('http://localhost:3000/api/Roles', {
                     Opcion: 2,
                     Nombre: e.data.NombreRol,
                     Descripcion: e.data.Descripcion,
+                    Permisos: permisos
                 })
                 .then(resp => {
                     if (resp.data.length > 0) {
@@ -113,7 +132,6 @@ export default {
         },
 
         editarRol(e) {
-            console.log(e)
             e.cancel = new Promise((resolve, reject) => {
                 this.axios.post('http://localhost:3000/api/Roles', {
                     Opcion: 3,
@@ -128,6 +146,12 @@ export default {
             })
         },
 
+        onSelectionChanged(e) {
+            const selectedItems = e.component.option("selectedItems");
+            this.permisosSeleccionados = selectedItems;
+            console.log('Permisos seleccionados:', this.permisosSeleccionados);
+        },
+
         eliminarRol(e) {
             e.cancel = new Promise((resolve, reject) => {
                 this.axios.post('http://localhost:3000/api/Roles', {
@@ -140,14 +164,66 @@ export default {
                 })
             })
         },
+
+        async cargarPermisos() {
+            await axios.post('http://localhost:3000/api/Permisos', {
+                    Opcion: 1
+                })
+                .then(resp => {
+                    if (resp.data.length > 0) {
+                        this.permisos = new ArrayStore({
+                            key: 'id',
+                            data: resp.data.map((x) => {
+                                return {
+                                    id: x.IdPermiso,
+                                    text: x.NombrePermiso
+                                }
+                            })
+                        })
+                    }
+                })
+        },
+
+        listarPermisosRol(idRol) {
+            axios.post('http://localhost:3000/api/Permisos_Rol', {
+                    Opcion: 1,
+                    Rol: idRol
+                })
+                .then(resp => {
+                    if (resp.data.length > 0) {
+                        this.permisosCargados = resp.data.map((x) => {
+                            return {
+                                id: x.Permiso
+                            }
+                        })
+                    }
+                })
+        },
+
+        onEditarRegistro(e) {
+            this.permisosCargados = []
+            this.listarPermisosRol(e.data.IdRol)
+        }
+    },
+    beforeMount() {
+        this.cargarPermisos()
     },
     mounted() {
         this.cargarRol()
+    },
+    watch: {
+        permisosSeleccionados(newVal) {
+            console.log('Permisos seleccionados:', newVal);
+        }
+    },
+    computed: {
+        listadoPermisos: function () {
+            return this.$refs[listaPermisos].instance;
+        },
     }
 }
 </script>
 
-    
 <style>
 #listaModulos .check-box {
     border-color: #e3e3e3;
