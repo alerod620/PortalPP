@@ -8,7 +8,7 @@
                 <DxEditing :allow-updating="true" :allow-adding="true" :allow-deleting="true" mode="popup" :use-icons="true" :confirmDelete="true">
                     <DxPopup :width="'60%'" height="auto" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Módulo" :showCloseButton="true" />
 
-                    <DxForm :form-data.sync="fomulario" label-mode="floating" height="'100%'" :col-count="1">
+                    <DxForm :form-data.sync="formulario" label-mode="floating" height="'100%'" :col-count="1">
                         <!-- <DxGroupItem> -->
                         <DxGroupItem :col-count="2">
                             <DxItem data-field="Nombre" editor-type="dxTextBox" />
@@ -85,7 +85,7 @@ export default {
         return {
             DefaultDxGridConfiguration,
             modulos: [],
-            fomulario: {},
+            formulario: {},
 
             visualizarModulo: false,
 
