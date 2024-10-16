@@ -136,7 +136,6 @@ export default {
         },
 
         mostrarPermisos(e) {
-            console.log(e)
             this.visualizarPermisos = true
             this.IdRolEditar = e.row.data.IdRol
             this.NombreRolEditar = 'Permisos ' + e.row.data.NombreRol
