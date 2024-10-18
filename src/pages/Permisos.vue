@@ -74,7 +74,7 @@ import {
 import axios from 'axios'
 
 export default {
-    name: 'Modulos',
+    name: 'Permisos',
     components: {
         DxDataGrid,
         DxSelection,
@@ -152,9 +152,21 @@ export default {
                 })
             })
         },
+
+        cargarModulos() {
+            axios.post('http://localhost:3000/api/Modulos', {
+                    Opcion: 1
+                })
+                .then(resp => {
+                    if (resp.data.length > 0) {
+                        this.modulos = resp.data
+                    }
+                })
+        },
     },
     mounted() {
         this.cargarPermisos()
+        this.cargarModulos()
     }
 }
 </script>
