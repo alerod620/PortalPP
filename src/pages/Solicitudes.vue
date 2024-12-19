@@ -27,6 +27,7 @@
                 <DxColumn width="auto" data-field="Nombre" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="Apellido" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="TipoUsuario" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="Registro" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="DPI" data-type="string" alignment="center" />
             </DxDataGrid>
         </div>
@@ -40,7 +41,8 @@
                         <DxItem data-field="Nombre" editor-type="dxTextBox" />
                         <DxItem data-field="Apellido" editor-type="dxTextBox" />
                         <DxItem data-field="DPI" editor-type="dxTextBox" />
-                        <DxItem data-field="TipoUsuario" editor-type="dxTextBox" />
+                        <DxItem data-field="Registro" editor-type="dxTextBox" />
+                        <!-- <DxItem data-field="TipoUsuario" editor-type="dxTextBox" /> -->
                     </DxItem>
                     <DxItem caption="Información usuario" item-type="group" :col-count="2">
                         <DxGroupItem :col-span="2">
@@ -49,7 +51,8 @@
                         <DxItem data-field="Nombre" editor-type="dxTextBox" />
                         <DxItem data-field="Apellido" editor-type="dxTextBox" />
                         <DxItem data-field="DPI" editor-type="dxTextBox" />
-                        <DxItem data-field="TipoUsuario" editor-type="dxTextBox" />
+                        <DxItem data-field="Registro" editor-type="dxTextBox" />
+                        <!-- <DxItem data-field="TipoUsuario" editor-type="dxTextBox" /> -->
                     </DxItem>
                 </DxGroupItem>
             </DxForm>
@@ -160,6 +163,26 @@ export default {
         verSolicitud(e) {
             this.solicitudActiva = e
             this.visualizarSolicitud = true
+
+            console.log(this.solicitudActiva)
+        },
+
+        buscarUsuario() {
+            console.log(this.solicitudActiva)
+            axios({
+                    method: 'post',
+                    url: 'http://localhost:3000/api/Usuarios',
+                    data: {
+                        Opcion: 2,
+                        Registro: registro
+                    },
+                })
+                .then((resp) => {
+                    if (resp.data.length > 0) {
+                        this.usuarios = resp.data
+                    }
+                });
+
         },
 
     },

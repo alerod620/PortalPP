@@ -52,21 +52,22 @@ export default {
             usuarios: []
         }
     },
+    props: {
+        Registro: null
+    },
     methods: {
         cargarUsuarios() {
             axios({
                     method: 'post',
-                    url: 'http://localhost:3000/api/Usuario',
+                    url: 'http://localhost:3000/api/Usuarios',
                     data: {
                         Opcion: 1,
-                        Id: 1
                     },
                 })
                 .then((resp) => {
-                    if(resp.data.length > 0)
-                {
-                    this.usuarios = resp.data
-                }
+                    if (resp.data.length > 0) {
+                        this.usuarios = resp.data
+                    }
                 });
 
             // this.usuarios = [{
