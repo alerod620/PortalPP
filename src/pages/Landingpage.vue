@@ -1,37 +1,5 @@
 <template>
 <div>
-    <!-- <vs-row>
-        <vs-col class="barra">
-            <div class="p-2 w-full sm:w-1/2 md:w-1/3 lg:w-1/5 espacioBoton" v-for="(item, index) in buttons" v-bind:key="index">
-                <vs-button class="botonLanding" v-if="item.value !== 5" type="border">
-                    <font-awesome-icon :icon="['fas', item.icon]" class="pr-2" style="font-size: 16px" />
-                    <span>{{ item.name }}</span>
-                </vs-button>
-                <vs-dropdown v-else style="width: 150px;">
-                    <vs-button style="width: 150px;" type="border">
-                        <font-awesome-icon :icon="['fas', item.icon]" class="pr-2" style="font-size: 16px" />
-                        <span>{{ item.name }}</span>
-                    </vs-button>
-
-                    <vs-dropdown-menu>
-                        <vs-dropdown-item @click="{ opcion = 5 }">
-                            Datos personales
-                        </vs-dropdown-item>
-                        <vs-dropdown-item divider @click="{ opcion = 6 }">
-                            Historial de citas
-                        </vs-dropdown-item>
-                        <vs-dropdown-item divider @click="{ sesion = false }">
-                            Cerrar Sesión
-                        </vs-dropdown-item>
-                        <vs-dropdown-item divider @click="abrirAyuda()">
-                            Ayuda
-                        </vs-dropdown-item>
-                    </vs-dropdown-menu>
-                </vs-dropdown>
-            </div>
-        </vs-col>
-    </vs-row> -->
-
     <DxTabs :selected-index="SelectedOption" height="10%" width="100%" :rtl-enabled="false" orientation="horizontal" styling-mode="secondary" :icon-position="'top'" :show-nav-buttons="true" :scroll-by-content="true" @item-click="(e)=>{ this.SelectedOption = e.itemIndex }">
         <DxItem v-for="(item, index) in buttons" :key="index" template="tabButton" />
         <template #tabButton="{index}">
@@ -90,6 +58,10 @@
             <div v-if="SelectedOption == 2">
                 <Publicaciones :modulo="2" />
             </div>
+
+            <div v-if="SelectedOption == 4">
+                <Login height="100%" />
+            </div>
         </card>
     </div>
 
@@ -105,13 +77,15 @@ import {
 import 'devextreme-vue/text-area'
 
 import Publicaciones from "@/pages/Publicaciones.vue";
+import Login from "@/pages/Login.vue";
 
 export default {
     name: 'Modulos',
     components: {
         DxTabs,
         DxItem,
-        Publicaciones
+        Publicaciones,
+        Login
     },
     data() {
         return {
