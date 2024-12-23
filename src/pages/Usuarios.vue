@@ -2,7 +2,7 @@
 <div>
     <card title="Usuarios">
         <div class="row p-2" style="display: grid; place-items: center;">
-            <DxDataGrid v-bind="DefaultDxGridConfiguration" :data-source="usuarios" :paging="{enabled: true}" :filter-sync-enabled="true" :headerFilter="{visible:false,allowSearch:true}" :searchPanel="{visible: true }" :height="'100%'" :width="'100%'">
+            <DxDataGrid v-bind="DefaultDxGridConfiguration" :data-source="usuarios" :paging="{enabled: true}" :filter-sync-enabled="true" :headerFilter="{visible:false,allowSearch:true}" :searchPanel="{visible: true }" :height="'100%'" :width="'100%'" @row-dbl-click="seleccionarUsuario">
                 <DxSelection mode="single" />
 
                 <DxEditing :allow-updating="true" :allow-adding="true" :allow-deleting="true" mode="popup" :use-icons="true" :confirmDelete="true">
@@ -49,11 +49,12 @@ export default {
     data() {
         return {
             DefaultDxGridConfiguration,
-            usuarios: []
+            usuarios: [],
         }
     },
     props: {
-        Registro: null
+        Registro: null,
+        usoComponente: false // Variable para indicar que se está usando la vista desde otro componente
     },
     methods: {
         cargarUsuarios() {
@@ -95,6 +96,12 @@ export default {
             //         Registro: 654712
             //     }
             // ]
+        },
+
+        seleccionarUsuario(e) {
+            if (this.usoComponente) {
+                this.$emit('usuario', e.data)
+            }
         }
     },
     mounted() {
