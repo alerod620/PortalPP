@@ -68,23 +68,23 @@
                 <img :src="solicitudActiva.Imagen" style="width: 500px; height: 300px; object-fit: cover">
             </div>
         </div>
-        <DxToolbarItem widget="dxButton" toolbar="bottom" location="center" :options="{ width: 130, text: 'Aceptar', type: 'success', icon: 'check' }" />
+        <DxToolbarItem widget="dxButton" toolbar="bottom" location="center" :options="{ width: 130, text: 'Aceptar', type: 'success', icon: 'check', onClick: () => { this.actualizarSolicitud(2, null) } }" />
         <DxToolbarItem widget="dxButton" toolbar="bottom" location="center" :options="{ width: 130, text: 'Rechazar', type: 'danger', icon: 'close', onClick: () => { this.rechazado = true }  }" />
     </DxPopup>
 
     <DxPopup :visible.sync="rechazado" :width="'30%'" height="'30%'" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Motivo de rechazo" :showCloseButton="true">
         <div>
-            <DxForm :form-data.sync="rechazoSolicitud" labelMode="floating" :read-only="verImagen">
+            <DxForm :form-data.sync="rechazoSolicitud" labelMode="floating">
                 <DxGroupItem :col-count="1">
-                    <DxItem data-field="Motivo" editor-type="dxTextBox" />
+                    <DxItem data-field="Motivo" editor-type="dxSelectBox" :editor-options="{ width: 'auto', searchEnabled: true, items: motivoRechazo, }" :validationRules="[{ type: 'required' }]" />
                 </DxGroupItem>
             </DxForm>
         </div>
-        <DxToolbarItem widget="dxButton" toolbar="bottom" location="center" :options="{ width: 130, text: 'Aceptar', type: 'success', }" />
-        <DxToolbarItem widget="dxButton" toolbar="bottom" location="center" :options="{ width: 130, text: 'Cancelar', type: 'danger', }" />
+        <DxToolbarItem widget="dxButton" toolbar="bottom" location="center" :options="{ width: 130, text: 'Aceptar', type: 'success', onClick: () => { this.actualizarSolicitud(3, this.rechazoSolicitud.Motivo) } }" />
+        <DxToolbarItem widget="dxButton" toolbar="bottom" location="center" :options="{ width: 130, text: 'Cancelar', type: 'danger', onClick: () => { this.rechazado = false } }" />
     </DxPopup>
 
-    <DxPopup :visible.sync="usuarioComponente" :width="'auto'" height="'auto%'" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Motivo de rechazo" :showCloseButton="true">
+    <DxPopup :visible.sync="usuarioComponente" :width="'90%'" height="'auto%'" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Usuarios" :showCloseButton="true">
         <div>
             <Usuarios :usoComponente="true" @usuario="seleccionarUsuario" />
         </div>
@@ -145,11 +145,14 @@ export default {
         return {
             DefaultDxGridConfiguration,
             solicitudes: [],
+
+            // Guarda le información de la solucitid que se está revisando
             solicitudActiva: {
                 Nombre: null,
                 Apellido: null,
                 DPI: null,
                 Registro: null,
+                IdSolicitudCuenta: null,
                 NombreUsuario: null,
                 ApellidoUsuario: null,
                 DPIUsuario: null,
@@ -183,7 +186,9 @@ export default {
 
             usuarioComponente: false, //Variable para saber cuando se mostrará el componente de buscar usuario
 
-            rechazoSolicitud: {}
+            rechazoSolicitud: {},
+
+            motivoRechazo: ['DPI incorrecto', 'No existe usuario con el registro indicado']
         }
     },
     methods: {
@@ -192,10 +197,49 @@ export default {
                     Opcion: 1
                 })
                 .then(resp => {
+                    this.solicitudes = resp.data
+                    // if (resp.data.length > 0) {
+                    //     this.solicitudes = resp.data
+                    // }
+                })
+        },
+
+        actualizarSolicitud(estado, motivo) {
+            
+            console.log({
+                Opcion: 3,
+                Nombre: null,
+                Apellido: null,
+                Correo: null,
+                Telefono: null,
+                DPI: null,
+                Registro: null,
+                IdSolicitud: this.solicitudActiva.IdSolicitudCuenta,
+                Estado: estado,
+                MotivoRechazo: motivo,
+            })
+
+            axios.post('http://localhost:3000/api/Solicitudes', {
+                    Opcion: 3,
+                    Nombre: null,
+                    Apellido: null,
+                    Correo: null,
+                    Telefono: null,
+                    DPI: null,
+                    Registro: null,
+                    IdSolicitud: this.solicitudActiva.IdSolicitudCuenta,
+                    Estado: estado,
+                    MotivoRechazo: motivo,
+                })
+                .then(resp => {
                     if (resp.data.length > 0) {
-                        this.solicitudes = resp.data
+                        console.log(resp.data)
+                        this.rechazado = false // Se cambia el valor de la variable del modal de motivo de rechazo por si se está rechazando la solicitud
+                        this.visualizarSolicitud = false // Se cambia el valor del modal que muestra la información de la solicitud
+                        this.cargarSolicitudes()
                     }
                 })
+                
         },
 
         verSolicitud(e) {
@@ -203,6 +247,7 @@ export default {
             this.solicitudActiva.Apellido = e.Apellido
             this.solicitudActiva.Registro = e.Registro
             this.solicitudActiva.DPI = e.DPI
+            this.solicitudActiva.IdSolicitudCuenta = e.IdSolicitudCuenta
 
             this.visualizarSolicitud = true
             this.buscarUsuario()
@@ -245,6 +290,6 @@ export default {
     },
     mounted() {
         this.cargarSolicitudes()
-    }
+    },
 }
 </script>

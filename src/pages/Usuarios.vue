@@ -11,10 +11,11 @@
 
                 <DxColumn width="auto" data-field="Nombre" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="Apellido" data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="CUI" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="Correo" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="Registro" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="Partida" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="Plaza" data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="Registro" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="DPI" data-type="string" alignment="center" />
             </DxDataGrid>
         </div>
     </card>
