@@ -35,40 +35,42 @@ export default ({
             selectedOption: 0,
             menu: [{
                 id: 1,
-                text: "Solicitudes",
-                icon: "bell",
-                path: "/solicitudes",
-            },
-            {
-                id: 2,
-                text: "Solvencias",
+                text: "Usuario",
                 icon: "users",
                 path: "/usuarios",
             },
             {
+                id: 2,
+                text: "Solicitud Solvencias",
+                icon: "newspaper",
+                path: "/usuarios",
+            },
+            {
                 id: 3,
-                text: "Módulos",
-                icon: "users-gear",
-                path: "/modulos",
+                text: "Solicitud Certificacion",
+                icon: "file",
+                path: "/solicitudCertificaciones",
             },
             {
                 id: 4,
-                text: "Publicaciones",
-                icon: "newspaper",
-                path: "/publicaciones",
+                text: "Notificaciones",
+                icon: "bell",
+                path: "/notificacionCertificaciones",
+            },
+            
+            {
+                id: 7,
+                text: "Seguimiento",
+                icon: "list-check",
+                path: "/seguimientoSolicitud",
             },
             {
-                id: 5,
-                text: "Reportes",
-                icon: "chart-line",
-                path: "",
+                id: 8,
+                text: "",
+                icon: "",
+                path: "/",
             },
-            {
-                id: 6,
-                text: "Permisos",
-                icon: "key",
-                path: "/permisos",
-            }]
+            ]
         }
     },
     methods: {
