@@ -6,9 +6,9 @@
             <span>Crear publicación</span>
         </vs-button>
         <div class="displayTail">
-            <div class="p-2 w-full md:w-1/2 lg:w-1/2 xl:w-1/3" v-for="(item, index) in publicaciones" v-bind:key="index">
-                <card class="publicaciones" :w-title="item.title">
-                    <span>{{ item.title }}</span>
+            <div class="p-2 w-full md:w-1/2 lg:w-1/2 xl:w-1/4" v-for="(item, index) in publicaciones" v-bind:key="index">
+                <card class="publicaciones" :w-title="item.Titulo">
+                    <span>{{ item.Titulo }}</span>
                     <div class="displayTail">
                         <vs-button class="m-2 botonesEditarPublicaciones w-full xl:w-1/3" color="primary" type="filled" @click.native="verPublicacion">
                             <font-awesome-icon :icon="['fas', 'eye']" class="fa mr-1" />
@@ -31,7 +31,7 @@
     </card>
 
     <div v-if="vista !== 0">
-        <Publicacion :tipo="vista" @cancelar="regresarVista" />
+        <Publicacion :tipo="vista" @regresar="regresarVista" @guardado="publicacionGuardada" />
     </div>
 </div>
 </template>
@@ -57,6 +57,7 @@ import {
 } from 'devextreme-vue/form'
 
 import 'devextreme-vue/text-area'
+import axios from 'axios'
 
 import Publicacion from './Publicacion.vue'
 
@@ -113,9 +114,24 @@ export default {
         regresarVista() {
             this.vista = 0
         },
-        cargarPublicaciones() {},
+        publicacionGuardada() {
+            this.vista = 0
+            this.cargarPublicaciones()
+        },
+        cargarPublicaciones() {
+            axios.post('http://localhost:3000/api/Publicaciones', {
+                    Opcion: 1,
+                })
+                .then(resp => {
+                    if (resp.data.length > 0) {
+                        this.publicaciones = resp.data
+                    }
+                })
+        },
     },
-    mounted() {}
+    mounted() {
+        this.cargarPublicaciones()
+    }
 }
 </script>
 

@@ -3,10 +3,15 @@
     <card :title="titulo">
         <form @submit="handleSubmit">
             <DxForm :form-data.sync="formulario">
-                <DxGroupItem :col-count="3">
-                    <DxItemForm data-field="Titulo" editor-type="dxTextBox" type="required" :validation-rules="[ { type: 'required', message: 'El título es obligatorio' } ]" />
-                    <DxItemForm data-field="FechaInicial" editor-type="dxDateBox" :validation-rules="[ { type: 'required', message: 'La fecha inicial es obligatoria' } ]" />
-                    <DxItemForm data-field="FechaFin" editor-type="dxDateBox" :validation-rules="[ { type: 'required', message: 'La fecha final es obligatoria' } ]" />
+                <DxGroupItem :col-count="2" :visible="tipo != 3">
+                    <DxGroupItem>
+                        <DxItemForm data-field="Titulo" editor-type="dxTextBox" type="required" :validation-rules="[ { type: 'required', message: 'El título es obligatorio' } ]" />
+                        <DxItemForm data-field="Activa" editor-type="dxCheckBox" :editor-options="{ text: 'Activo', onValueChanged: handleCheckboxChange }" />
+                    </DxGroupItem>
+                    <DxGroupItem>
+                        <DxItemForm data-field="FechaInicio" editor-type="dxDateBox" :editor-options="{ disabled: formulario.Activa, dateSerializationFormat: 'yyyy-MM-dd' }" :validation-rules="fechaInicialValidation" />
+                        <DxItemForm data-field="FechaFin" editor-type="dxDateBox" :editor-options="{ disabled: formulario.Activa, dateSerializationFormat: 'yyyy-MM-dd' }" :validation-rules="fechaFinValidation" />
+                    </DxGroupItem>
                 </DxGroupItem>
                 <DxGroupItem :col-count="1">
                     <DxItemForm template="editor" />
@@ -125,7 +130,9 @@ export default {
         return {
             DefaultDxGridConfiguration,
             publicacion: null,
-            formulario: {},
+            formulario: {
+                Activa: false
+            },
 
             sizeValues: ['8pt', '10pt', '12pt', '14pt', '18pt', '24pt', '36pt'],
             fontValues: ['Arial', 'Georgia', 'Tahoma', 'Times New Roman', 'Verdana'],
@@ -172,27 +179,61 @@ export default {
                 text: 'Cancelar',
                 type: 'danger',
                 icon: 'close',
+                onClick: () => {
+                    this.$emit("regresar", true);
+                }
             },
+
+            fechaInicialValidation: [{
+                type: 'required',
+                message: 'La fecha inicial es obligatoria'
+            }],
+            fechaFinValidation: [{
+                type: 'required',
+                message: 'La fecha final es obligatoria'
+            }],
         }
     },
     methods: {
         cancelarAccion() {
             this.$emit('cancelar', true)
         },
-        guardarPublicacion() {
-            console.log(this.formulario)
-            // axios.post('http://localhost:3000/api/Publicaciones', {
-            //         Opcion: 2,
-            //         Titulo: this.formulario.Titulo,
-            //         Contenido: this.contenidoPublicacion,
 
-            //     })
-            //     .then(resp => {
-            //         this.publicacion = resp.data
-            //         // if (resp.data.length > 0) {
-            //         //     this.solicitudes = resp.data
-            //         // }
-            //     })
+        handleCheckboxChange(e) {
+            // Actualizar el valor de Activa al cambiar el checkbox
+            this.formulario.Activa = e.value;
+
+            // Si el checkbox está activado, eliminar las reglas de validación
+            if (e.value) {
+                this.fechaInicialRules = []; // Quitar validación
+                this.fechaFinRules = []; // Quitar validación
+            } else {
+                this.fechaInicialRules = [{
+                    type: 'required',
+                    message: 'La fecha inicial es obligatoria'
+                }];
+                this.fechaFinRules = [{
+                    type: 'required',
+                    message: 'La fecha final es obligatoria'
+                }];
+            }
+        },
+
+        guardarPublicacion() {
+
+            axios.post('http://localhost:3000/api/Publicaciones', {
+                    Opcion: 2,
+                    Titulo: this.formulario.Titulo,
+                    Contenido: this.contenidoPublicacion,
+                    Estado: this.formulario.Activa, //Si se marca como activa no se guardarán las fechas, ya que la publicación siempre estará activa
+                    FechaInicio: !this.formulario.Activa ? this.formulario.FechaInicio : null,
+                    FechaFin: !this.formulario.Activa ? this.formulario.FechaFin : null
+                })
+                .then(resp => {
+                    if (resp.data.length > 0) {
+                        this.$emit("guardado", true);
+                    }
+                })
         },
 
         handleSubmit(e) {
