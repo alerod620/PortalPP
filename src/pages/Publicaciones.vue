@@ -6,19 +6,19 @@
             <span>Crear publicación</span>
         </vs-button>
         <div class="displayTail">
-            <div class="p-2 w-full md:w-1/2 lg:w-1/2 xl:w-1/4" v-for="(item, index) in publicaciones" v-bind:key="index">
+            <div class="p-2 w-full md:w-1/2 lg:w-1/2 xl:w-1/3" v-for="(item, index) in publicaciones" v-bind:key="index">
                 <card class="publicaciones" :w-title="item.Titulo">
                     <span>{{ item.Titulo }}</span>
                     <div class="displayTail">
-                        <vs-button class="m-2 botonesEditarPublicaciones w-full xl:w-1/3" color="primary" type="filled" @click.native="verPublicacion">
+                        <vs-button class="m-2 w-full lg:w-1/3 xl:w-1/3" color="primary" type="filled" @click.native="editarPublicacion(item,3)">
                             <font-awesome-icon :icon="['fas', 'eye']" class="fa mr-1" />
                             <span>Ver</span>
                         </vs-button>
-                        <vs-button v-if="permisoEdicion !== null" class="m-2 botonesEditarPublicaciones w-full lg:w-1/3 xl:w-1/3" color="success" type="filled" @click.native="editarPublicacion">
+                        <vs-button v-if="permisoEdicion !== null" class="m-2 w-full lg:w-1/3 xl:w-1/3" color="success" type="filled" @click.native="editarPublicacion(item,2)">
                             <font-awesome-icon :icon="['fas', 'edit']" class="fa mr-1" />
                             <span>Editar</span>
                         </vs-button>
-                        <vs-button v-if="permisoEdicion !== null" class="m-2 botonesEditarPublicaciones w-full lg:w-1/3 xl:w-1/3" color="danger" type="filled">
+                        <vs-button v-if="permisoEdicion !== null" class="m-2 w-full lg:w-1/3 xl:w-1/3" color="danger" type="filled" @click.native="confirmarEliminacion(item)">
                             <font-awesome-icon :icon="['fas', 'trash']" class="fa mr-1" />
                             <span>Eliminar</span>
                         </vs-button>
@@ -31,7 +31,7 @@
     </card>
 
     <div v-if="vista !== 0">
-        <Publicacion :tipo="vista" @regresar="regresarVista" @guardado="publicacionGuardada" />
+        <Publicacion :tipo="vista" @regresar="regresarVista" @guardado="publicacionGuardada" :publicacion="publicacionSeleccionada" />
     </div>
 </div>
 </template>
@@ -60,6 +60,9 @@ import 'devextreme-vue/text-area'
 import axios from 'axios'
 
 import Publicacion from './Publicacion.vue'
+import {
+    confirm
+} from 'devextreme/ui/dialog';
 
 export default {
     name: 'Publicaciones',
@@ -83,33 +86,23 @@ export default {
 
             vista: 0, //Variable para determinar que ver
 
-            publicaciones: [{
-                title: 'Publicacion 1',
-                image: '',
-                value: ''
-            }, {
-                title: 'Publicacion 2',
-                image: '',
-                value: ''
-            }, {
-                title: 'Publicacion 3',
-                image: '',
-                value: ''
-            }, ],
+            publicaciones: [],
 
-            permisoEdicion: null
+            permisoEdicion: true,
+
+            publicacionSeleccionada: null
         }
     },
     methods: {
         nuevaPublicacion() {
             this.vista = 1
         },
-        editarPublicacion() {
-            this.vista = 2
-        },
-        verPublicacion() {
-            this.vista = 3
-            // this.$router.push('/publicacion')
+
+        editarPublicacion(e, vista) {
+            console.log(e)
+            this.publicacionSeleccionada = e
+            this.publicacionSeleccionada.Activa = e.Estado == 1 ? true : false
+            this.vista = vista
         },
         regresarVista() {
             this.vista = 0
@@ -125,6 +118,27 @@ export default {
                 .then(resp => {
                     if (resp.data.length > 0) {
                         this.publicaciones = resp.data
+                    }
+                })
+        },
+
+        confirmarEliminacion(e) {
+            confirm(`¿Está seguro de querer eliminar la publicación "${e.Titulo}"?`, 'Confirmar eliminación')
+                .then((dialogResult) => {
+                    if (dialogResult) {
+                        this.eliminarPublicaciones(e);
+                    } 
+                });
+        },
+
+        eliminarPublicaciones(e) {
+            axios.post('http://localhost:3000/api/Publicaciones', {
+                    Opcion: 4,
+                    IdPublicacion: e.IdPublicacion
+                })
+                .then(resp => {
+                    if (resp.data.length > 0) {
+                        this.cargarPublicaciones()
                     }
                 })
         },

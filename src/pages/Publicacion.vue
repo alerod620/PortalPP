@@ -6,7 +6,7 @@
                 <DxGroupItem :col-count="2" :visible="tipo != 3">
                     <DxGroupItem>
                         <DxItemForm data-field="Titulo" editor-type="dxTextBox" type="required" :validation-rules="[ { type: 'required', message: 'El título es obligatorio' } ]" />
-                        <DxItemForm data-field="Activa" editor-type="dxCheckBox" :editor-options="{ text: 'Activo', onValueChanged: handleCheckboxChange }" />
+                        <DxItemForm data-field="Activa" editor-type="dxCheckBox" :editor-options="{ text: 'La publicación siempre se verá', onValueChanged: handleCheckboxChange }" />
                     </DxGroupItem>
                     <DxGroupItem>
                         <DxItemForm data-field="FechaInicio" editor-type="dxDateBox" :editor-options="{ disabled: formulario.Activa, dateSerializationFormat: 'yyyy-MM-dd' }" :validation-rules="fechaInicialValidation" />
@@ -22,7 +22,7 @@
 
                 <template #editor>
                     <DxHtmlEditor class="mt-4" value-type="html" :value.sync="contenidoPublicacion" :read-only="tipo == 3">
-                        <DxToolbar :multiline="true" v-if="tipo == 1">
+                        <DxToolbar :multiline="true" v-if="tipo != 3">
                             <DxItem name="undo" />
                             <DxItem name="redo" />
                             <DxItem name="separator" />
@@ -123,13 +123,12 @@ export default {
         DxButtonItem
     },
     props: {
-        publicacionValue: null,
-        tipo: null // 1 = crear publicacion, 2 = edicion, 3 = vista
+        tipo: null, // 1 = crear publicacion, 2 = edicion, 3 = vista
+        publicacion: null
     },
     data() {
         return {
             DefaultDxGridConfiguration,
-            publicacion: null,
             formulario: {
                 Activa: false
             },
@@ -203,16 +202,16 @@ export default {
             // Actualizar el valor de Activa al cambiar el checkbox
             this.formulario.Activa = e.value;
 
-            // Si el checkbox está activado, eliminar las reglas de validación
+            // Actualizar reglas de validación dinámicamente
             if (e.value) {
-                this.fechaInicialRules = []; // Quitar validación
-                this.fechaFinRules = []; // Quitar validación
+                this.fechaInicialValidation = [];
+                this.fechaFinValidation = [];
             } else {
-                this.fechaInicialRules = [{
+                this.fechaInicialValidation = [{
                     type: 'required',
                     message: 'La fecha inicial es obligatoria'
                 }];
-                this.fechaFinRules = [{
+                this.fechaFinValidation = [{
                     type: 'required',
                     message: 'La fecha final es obligatoria'
                 }];
@@ -236,19 +235,61 @@ export default {
                 })
         },
 
-        handleSubmit(e) {
-            e.preventDefault()
-            this.guardarPublicacion()
+        editarPublicacion() {
+            axios.post('http://localhost:3000/api/Publicaciones', {
+                    Opcion: 3,
+                    Titulo: this.formulario.Titulo,
+                    Contenido: this.contenidoPublicacion,
+                    Estado: this.formulario.Activa, //Si se marca como activa no se guardarán las fechas, ya que la publicación siempre estará activa
+                    FechaInicio: !this.formulario.Activa ? this.formulario.FechaInicio : null,
+                    FechaFin: !this.formulario.Activa ? this.formulario.FechaFin : null,
+                    IdPublicacion: this.publicacion.IdPublicacion
+                })
+                .then(resp => {
+                    if (resp.data.length > 0) {
+                        this.$emit("guardado", true);
+                    }
+                })
         },
 
+        handleSubmit(e) {
+            e.preventDefault()
+            if (this.tipo == 1) {
+                this.guardarPublicacion()
+            } else if(this.tipo == 2) {
+                this.editarPublicacion()
+            }
+
+        },
+
+    },
+    watch: {
+        'formulario.Activa'(newValue) {
+            if (newValue) {
+                this.fechaInicialValidation = [];
+                this.fechaFinValidation = [];
+            } else {
+                this.fechaInicialValidation = [{
+                    type: 'required',
+                    message: 'La fecha inicial es obligatoria'
+                }];
+                this.fechaFinValidation = [{
+                    type: 'required',
+                    message: 'La fecha final es obligatoria'
+                }];
+            }
+        }
     },
     beforeMount() {
         if (this.tipo == 1) {
             this.titulo = 'Crear nueva publicación'
         } else if (this.tipo == 2) {
             this.titulo = 'Edición publicación'
+            this.formulario = this.publicacion
+            this.contenidoPublicacion = this.publicacion.Contenido
         } else if (this.tipo == 3) {
-            this.titulo = 'Ver publicación'
+            this.titulo = this.publicacion.Titulo
+            this.contenidoPublicacion = this.publicacion.Contenido
         }
     },
     mounted() {
