@@ -108,6 +108,11 @@ import {
     DxButtonItem
 } from 'devextreme-vue/form';
 import DxPopup from 'devextreme-vue/popup';
+
+import {
+    validarDPI
+} from './data'
+
 import axios from 'axios'
 
 export default {
@@ -138,6 +143,7 @@ export default {
         };
     },
     methods: {
+        validarDPI,
         mensajeAceptar() {
             this.recuperarContraseña = false;
         },
@@ -171,41 +177,6 @@ export default {
                     }
                 })
         },
-
-        validarDPI(e) {
-            const cui = e.value;
-
-            // Validación de CUI
-            const cuiRegExp = /^[0-9]{4}\s?[0-9]{5}\s?[0-9]{4}$/;
-            if (!cuiRegExp.test(cui)) {
-                return false;
-            }
-
-            const cleanedCUI = cui.replace(/\s/g, '');
-            const depto = parseInt(cleanedCUI.substring(9, 11), 10);
-            const muni = parseInt(cleanedCUI.substring(11, 13));
-            const numero = cleanedCUI.substring(0, 8);
-            const verificador = parseInt(cleanedCUI.substring(8, 9));
-
-            // Listado de municipios por departamento
-            const munisPorDepto = [
-                17, 8, 16, 16, 13, 14, 19, 8, 24, 21, 9, 30, 32, 21, 8, 17, 14, 5, 11, 11, 7, 17
-            ];
-
-            // Validar departamento y municipio
-            if (depto === 0 || muni === 0 || depto > munisPorDepto.length || muni > munisPorDepto[depto - 1]) {
-                return false;
-            }
-
-            // Validación de complemento 11
-            let total = 0;
-            for (let i = 0; i < numero.length; i++) {
-                total += parseInt(numero[i], 10) * (i + 2);
-            }
-
-            const modulo = total % 11;
-            return modulo === verificador;
-        }
     }
 }
 </script>
