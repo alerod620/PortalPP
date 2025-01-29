@@ -19,7 +19,8 @@ import Roles from "@/pages/Roles.vue";
 import Publicaciones from "@/pages/Publicaciones.vue";
 import Publicacion from "@/pages/Publicacion.vue";
 import Recibos from "@/pages/Recibos.vue";
-import DeclaracionBeneficiarios from "@/pages/DeclaracionBeneficiarios.vue";
+// import DeclaracionBeneficiarios from "@/pages/DeclaracionBeneficiarios.vue";
+import Declaracion from "@/pages/Declaracion.vue";
 import Inicio from "@/pages/InicioAfiliado.vue";
 import Landing from "@/pages/Landingpage.vue";
 
@@ -112,7 +113,7 @@ const routes = [
       {
         path: "declaracionbeneficiarios",
         name: "declaracionbeneficiarios",
-        component: DeclaracionBeneficiarios,
+        component: Declaracion,
       },
       {
         path: "inicio",

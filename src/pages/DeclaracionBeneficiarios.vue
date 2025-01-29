@@ -58,7 +58,7 @@ import {
 import 'devextreme-vue/text-area'
 
 export default {
-    name: 'Modulos',
+    name: 'DeclaracionAdmin',
     components: {
         DxDataGrid,
         DxSelection,
