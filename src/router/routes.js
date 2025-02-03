@@ -24,11 +24,13 @@ import Inicio from "@/pages/InicioAfiliado.vue";
 import Landing from "@/pages/Landingpage.vue";
 
 //para el manejo del modulo de certificaciones
-import menuCertificaciones from "@/pages/moduloCertificaciones/menuCertificaciones.vue";
-import solicitudCertificaciones from "@/pages/moduloCertificaciones/solicitudCertificaciones.vue";
-import seguimientoSolicitud from "@/pages/moduloCertificaciones/progresoSolicitud.vue";
-import notificacionCertificaciones from "@/pages/moduloCertificaciones/notificacionCertificaciones.vue";
-
+//usuario externo
+import menuCertificaciones from "@/pages/moduloCertificaciones/pantallasUsuarioExterno/menuCertificaciones.vue";
+import solicitudCertificaciones from "@/pages/moduloCertificaciones/pantallasUsuarioExterno/solicitudCertificaciones.vue";
+import seguimientoSolicitud from "@/pages/moduloCertificaciones/pantallasUsuarioExterno/progresoSolicitud.vue";
+import notificacionCertificaciones from "@/pages/moduloCertificaciones/pantallasUsuarioExterno/notificacionCertificaciones.vue";
+//usuario empleado PP
+import revisionSolicitudes from "@/pages/moduloCertificaciones/pantallasEmpleadoPP/revisionSolicitudes.vue";
 
 const routes = [
   {
@@ -150,6 +152,11 @@ const routes = [
         path: "notificacionCertificaciones",
         name: "notificacionCertificaciones",
         component: notificacionCertificaciones,
+      },
+      {
+        path: "revisionSolicitudes",
+        name: "revisionSolicitudes",
+        component: revisionSolicitudes,
       }
     ],
   },
