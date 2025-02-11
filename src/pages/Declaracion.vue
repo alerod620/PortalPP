@@ -1,11 +1,6 @@
 <template>
 <div>
     <card title="Declaración de beneficiarios">
-        <div class="mt-4" style="display: flex; justify-content: center;">
-            <vs-button color="success" type="filled" style="width: 250px; size: 20px" @click="generarPDF">
-                <span>PDF</span>
-            </vs-button>
-        </div>
         <form @submit="handleSubmit">
             <DxForm :ref="formularioDependencia" :form-data.sync="formulario" label-mode="floating">
                 <DxGroupItem :col-count="3" caption="Datos personales">
