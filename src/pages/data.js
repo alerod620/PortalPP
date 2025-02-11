@@ -29,6 +29,22 @@ export const DefaultDxGridConfiguration = {
     
 }
 
+export function validarTelefonoFijo(e) {
+  const telefono = e.value;
+
+  // Validar formato del número fijo
+  const telefonoRegExp = /^[2,6,7][0-9]{7}$/;
+  return telefonoRegExp.test(telefono);
+}
+
+export function validarTelefonoCelular(e) {
+  const telefono = e.value;
+
+  // Validar formato del número celular
+  const telefonoRegExp = /^[3,4,5][0-9]{7}$/;
+  return telefonoRegExp.test(telefono);
+}
+
 export function validarDPI(e) {
   const cui = e.value;
 
@@ -174,7 +190,7 @@ export const Departamentos = [
       "Chinautla",
       "Chuarrancho",
       "Fraijanes",
-      "Guatemala City",
+      "Guatemala",
       "Mixco",
       "Palencia",
       "Petapa",
