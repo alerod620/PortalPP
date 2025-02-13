@@ -21,7 +21,7 @@
               <sidebar-link to="/declaracionbeneficiarios" name="Beneficiarios" icon="child" />
               <sidebar-link to="/inicio" name="Inicio" icon="tachometer" />
               <sidebar-link to="/landing" name="Landing page" icon="home" />
-              <sidebar-link to="/menuCertificaciones" name="Landing page" icon="home" />
+              <sidebar-link to="/menuCertificaciones" name="Menu Certificaciones" icon="home" />
           </template>
           <mobile-menu>
               <li class="nav-item">

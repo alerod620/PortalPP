@@ -48,21 +48,21 @@ export default ({
             {
                 id: 3,
                 text: "Solicitud Certificacion",
-                icon: "file",
+                icon: "file-circle-check",
                 path: "/solicitudCertificaciones",
             },
             {
                 id: 4,
-                text: "Notificaciones",
-                icon: "bell",
-                path: "/notificacionCertificaciones",
+                text: "Solicitudes Nuevas",
+                icon: "file-import",
+                path: "/revisionSolicitudes",
             },
             
             {
                 id: 7,
                 text: "Seguimiento",
                 icon: "list-check",
-                path: "/seguimientoSolicitud",
+                path: "/solicitudesUsuario",
             },
             {
                 id: 8,
