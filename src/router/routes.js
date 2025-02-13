@@ -29,6 +29,7 @@ import menuCertificaciones from "@/pages/moduloCertificaciones/pantallasUsuarioE
 import solicitudCertificaciones from "@/pages/moduloCertificaciones/pantallasUsuarioExterno/solicitudCertificaciones.vue";
 import seguimientoSolicitud from "@/pages/moduloCertificaciones/pantallasUsuarioExterno/progresoSolicitud.vue";
 import notificacionCertificaciones from "@/pages/moduloCertificaciones/pantallasUsuarioExterno/notificacionCertificaciones.vue";
+import solicitudesHechasPorUsuario from "@/pages/moduloCertificaciones/pantallasUsuarioExterno/solicitudesUsuario.vue";
 //usuario empleado PP
 import revisionSolicitudes from "@/pages/moduloCertificaciones/pantallasEmpleadoPP/revisionSolicitudes.vue";
 
@@ -157,6 +158,11 @@ const routes = [
         path: "revisionSolicitudes",
         name: "revisionSolicitudes",
         component: revisionSolicitudes,
+      },
+      {
+        path: "solicitudesUsuario",
+        name: "solicitudesHechasPorUsuario",
+        component: solicitudesHechasPorUsuario,
       }
     ],
   },

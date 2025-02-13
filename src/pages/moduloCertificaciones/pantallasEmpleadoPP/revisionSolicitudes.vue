@@ -2,159 +2,187 @@
   <div class="solicitudes-container">
     <h1 class="title">Solicitudes</h1>
 
-    <!-- Lista de solicitudes -->
-    <div v-for="solicitud in solicitudes" :key="solicitud.id" class="solicitud-card">
-      <div class="solicitud-header">
-        <span class="solicitud-id">{{ solicitud.id }} - {{ solicitud.tipo }}</span>
-        <span class="fecha-actualizacion">Fecha Actualización: {{ solicitud.fechaActualizacion }}</span>
-      </div>
+    <!-- Tabla de solicitudes -->
+    <div class="row p-2" style="display: grid; place-items: center;">
+      <DxDataGrid
+        v-bind="DefaultDxGridConfiguration"
+        :data-source="solicitudes"
+        :paging="{ enabled: true }"
+        :filter-sync-enabled="true"
+        :header-filter="{ visible: true, allowSearch: true }"
+        :search-panel="{ visible: true }"
+        :height="'100%'"
+        :width="'100%'"
+      >
+        <DxSelection mode="single" />
 
-      <div class="solicitud-estado">
-        <strong>Estado:</strong> {{ solicitud.estado }}
-      </div>
+        <DxEditing
+          :allow-updating="false"
+          :allow-adding="false"
+          :allow-deleting="false"
+          mode="popup"
+          :use-icons="true"
+          :confirm-delete="true"
+        />
 
-      <div class="solicitud-acciones">
-        <button v-if="solicitud.estado === 'Solicitud ingresada'" @click="revisarSolicitud(solicitud)" class="btn btn-primary">
-          Revisar
-        </button>
-        <button v-if="solicitud.estado === 'Espera de firma Supervisor'" @click="editarSolicitud(solicitud)" class="btn btn-secondary">
-          Editar
-        </button>
-        <button @click="verVistaPrevia(solicitud)" class="btn btn-info">
-          Vista Previa
-        </button>
-        <button @click="eliminarSolicitud(solicitud)" class="btn btn-danger">
-          X
-        </button>
-      </div>
+        <!-- Columnas de la tabla -->
+        <DxColumn width="auto" data-field="idSolicitud" caption="ID" data-type="number" alignment="center" />
+        <DxColumn width="auto" data-field="tipoCertificacion" caption="Tipo" data-type="string" alignment="center" />
+        <DxColumn width="auto" data-field="fechaUltimaActualizacion" caption="Fecha Actualización" data-type="string" alignment="center" />
+        <DxColumn width="auto" data-field="estado" caption="Estado" data-type="string" alignment="center" />
+        
+        <DxColumn
+          width="auto"
+          caption="Asignado"
+          alignment="center"
+          cell-template="asignadoTemplate" 
+        />
+
+        <!-- Plantilla para la columna "Asignado" -->
+            <template #asignadoTemplate="{ data }">
+              <span v-if="data.data.PersonalIPP_idEmpleado === null" class="icono-x">
+               
+                <font-awesome-icon :icon="['far', 'rectangle-xmark']" />
+              </span>
+              <span v-else class="icono-check">
+                
+                <font-awesome-icon :icon="['far', 'square-check']" />
+              </span>
+            </template>
+          
+
+        <!-- Columna personalizada para el botón "Revisar" -->
+        <DxColumn
+          :width="100"
+          caption="Acciones"
+          alignment="center"
+          cell-template="botonRevisarTemplate" 
+        />
+        
+        <!-- Plantilla para el botón "Revisar" -->
+        <template #botonRevisarTemplate="{ data }">
+          <button class="boton-revisar" @click="verSolicitud(data.data)">
+            Revisar
+          </button>
+        </template>
+      </DxDataGrid>
     </div>
+
+    <!-- Modal de Vista Previa -->
+    <ModalVistaPrevia
+      v-if="modalVisible"
+      :solicitud="solicitudSeleccionada"
+      :isVisible="modalVisible"
+      @cerrar-modal="cerrarModal"
+    />
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+import { DxDataGrid, DxColumn, DxSelection, DxEditing } from 'devextreme-vue/data-grid';
+import ModalVistaPrevia from '../../../components/Modals/SolicitudEstadoDeCuentaModal.vue';
+
 export default {
+  components: {
+    DxDataGrid,
+    DxColumn,
+    DxSelection,
+    DxEditing,
+    ModalVistaPrevia,
+  },
   data() {
     return {
-      // Lista de solicitudes
-      solicitudes: [
-        {
-          id: 29120,
-          tipo: 'Certificación Cuotas',
-          fechaActualizacion: '08/05/2024',
-          estado: 'Solicitud ingresada'
-        },
-        {
-          id: 29121,
-          tipo: 'Certificación Cuotas',
-          fechaActualizacion: '11/05/2024',
-          estado: 'Espera de firma Supervisor'
-        }
-      ]
+      solicitudes: [],
+      modalVisible: false,
+      solicitudSeleccionada: null,
+      DefaultDxGridConfiguration: {
+        showBorders: true,
+        rowAlternationEnabled: true,
+        columnAutoWidth: true,
+        columnHidingEnabled: true,
+      },
     };
   },
   methods: {
-    // Acción para revisar una solicitud
-    revisarSolicitud(solicitud) {
-      alert(`Revisando solicitud: ${solicitud.id}`);
+    // Método para obtener las solicitudes desde el backend
+    obtenerSolicitudes() {
+      console.log('Obteniendo solicitudes pendientes...');
+      const url = 'http://localhost:3000/api/certificaciones/getSolicitudesPendientes';
+      const data = { idUsuarioEmpleado: 1 };
+
+      axios
+        .post(url, data)
+        .then(resp => {
+          console.log(resp.data);
+
+          if (resp.data.success && resp.data.data) {
+            this.solicitudes = resp.data.data;
+            console.log("Solicitudes obtenidas:", this.solicitudes);
+          } else {
+            console.warn("No se encontraron solicitudes pendientes.");
+          }
+        })
+        .catch(error => {
+          console.error('Error al obtener las solicitudes:', error);
+        });
     },
 
-    // Acción para editar una solicitud
-    editarSolicitud(solicitud) {
-      alert(`Editando solicitud: ${solicitud.id}`);
+    // Método para ver una solicitud (acción del botón en la columna)
+    verSolicitud(solicitud) {
+      this.solicitudSeleccionada = solicitud;
+      this.modalVisible = true;
     },
 
-    // Acción para ver la vista previa de una solicitud
-    verVistaPrevia(solicitud) {
-      alert(`Vista previa de la solicitud: ${solicitud.id}`);
+    // Acción para cerrar el modal
+    cerrarModal() {
+      this.modalVisible = false;
     },
-
-    // Acción para eliminar una solicitud
-    eliminarSolicitud(solicitud) {
-      if (confirm(`¿Estás seguro de eliminar la solicitud ${solicitud.id}?`)) {
-        this.solicitudes = this.solicitudes.filter(s => s.id !== solicitud.id);
-        alert(`Solicitud ${solicitud.id} eliminada`);
-      }
-    }
-  }
+  },
+  mounted() {
+    this.obtenerSolicitudes();
+  },
 };
 </script>
 
 <style scoped>
 .solicitudes-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
 
-h1 {
+.title {
+  font-size: xx-large;
   text-align: center;
+  color: #0B355B;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   margin-bottom: 20px;
 }
 
-.solicitud-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 15px;
-  background-color: #f9f9f9;
+/* Estilos para el botón "Revisar" */
+.boton-revisar {
+  background-color: #4CAF50; /* Color de fondo */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  padding: 5px 10px; /* Espaciado interno */
+  font-size: 14px; /* Tamaño de la fuente */
+  cursor: pointer; /* Cambia el cursor al pasar el mouse */
+  transition: background-color 0.3s ease; /* Transición suave */
 }
 
-.solicitud-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+.boton-revisar:hover {
+  background-color: #45a049; /* Cambia el color al pasar el mouse */
 }
 
-.solicitud-id {
-  font-weight: bold;
+.icono-x {
+  color: red; /* Color rojo para el ícono de "X" */
+  font-size: 18px;
 }
 
-.fecha-actualizacion {
-  color: #666;
-  font-size: 0.9em;
-}
-
-.solicitud-estado {
-  margin-bottom: 10px;
-}
-
-.solicitud-acciones {
-  display: flex;
-  gap: 10px;
-}
-
-.btn {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-}
-
-.btn-info {
-  background-color: #17a2b8;
-  color: white;
-}
-
-.btn-danger {
-  background-color: #dc3545;
-  color: white;
-}
-
-.title {
-    font-size: xx-large;
-    text-align: center;
-    color: #0B355B;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+.icono-check {
+  color: green; /* Color verde para el ícono de "check" */
+  font-size: 18px;
 }
 </style>
