@@ -45,6 +45,7 @@
                         <!-- <DxItem data-field="TipoUsuario" editor-type="dxTextBox" /> -->
                     </DxItem>
                     <DxItem caption="Información usuario" item-type="group" :col-count="2">
+                        <!-- <DxItem v-if="usuariosEncontrados.length > 1" template="botones" /> -->
                         <DxGroupItem :col-span="2">
                             <DxButtonItem :button-options="buttonBuscarUsuario" horizontal-alignment="center" verical-alignment="center" />
                         </DxGroupItem>
@@ -63,6 +64,19 @@
                         <!-- <DxItem data-field="TipoUsuario" editor-type="dxTextBox" /> -->
                     </DxItem>
                 </DxGroupItem>
+
+                <!-- <template #botones>
+                    <div class="buttons">
+                        <div class="p-2 w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4 div-button" v-for="(item, index) in usuariosEncontrados" v-bind:key="index">
+                            <vs-button class="button" color="dark" type="border" @click.native="OpcionSeleccionada(item)">
+                                <div>
+                                    <font-awesome-icon :icon="['fas', this.posiblesUsuarios.find((x) => x.id === item.TipoUsuario).icono]" class="i-size" />
+                                </div>
+                                <span>{{this.posiblesUsuarios.find((x) => x.id === item.TipoUsuario).texto}}</span>
+                            </vs-button>
+                        </div>
+                    </div>
+                </template> -->
             </DxForm>
             <div v-if="verImagen" style="display: grid; place-items: center;" class="mt-2">
                 <img :src="solicitudActiva.Imagen" style="width: 500px; height: 300px; object-fit: cover">
@@ -152,12 +166,15 @@ export default {
                 Apellido: null,
                 DPI: null,
                 Registro: null,
+                Telefono: null,
+                Correo: null,
                 IdSolicitudCuenta: null,
                 NombreUsuario: null,
                 ApellidoUsuario: null,
                 DPIUsuario: null,
                 RegistroUsuario: null,
-                IdUsuario: null
+                IdUsuario: null,
+                TipoUsuario: null
             },
 
             visualizarSolicitud: false,
@@ -175,6 +192,8 @@ export default {
                 }
             },
 
+            usuariosEncontrados: [],
+
             usuarioEncontrado: {
                 Nombre: null,
                 Apellido: null,
@@ -188,7 +207,19 @@ export default {
 
             rechazoSolicitud: {},
 
-            motivoRechazo: ['DPI incorrecto', 'No existe usuario con el registro indicado']
+            motivoRechazo: ['DPI incorrecto', 'No existe usuario con el registro indicado'],
+
+            posiblesUsuarios: [{
+                    id: 1,
+                    texto: 'Viudo',
+                    icono: 'fa-person-half-dress'
+                },
+                {
+                    id: 2,
+                    texto: 'Huefano',
+                    icono: 'fa-hands-holding-child'
+                }
+            ]
         }
     },
     methods: {
@@ -204,50 +235,52 @@ export default {
                 })
         },
 
-        actualizarSolicitud(estado, motivo) {
-            
-            console.log({
-                Opcion: 3,
-                Nombre: null,
-                Apellido: null,
-                Correo: null,
-                Telefono: null,
-                DPI: null,
-                Registro: null,
-                IdSolicitud: this.solicitudActiva.IdSolicitudCuenta,
-                Estado: estado,
-                MotivoRechazo: motivo,
-            })
+        actualizarSolicitud(estado, motivo) { // estado = 2 'aprobada', estado = 3 'rechazada' (estado = 1 'pendiente' pero se maneja en base datos)
 
             axios.post('http://localhost:3000/api/Solicitudes', {
                     Opcion: 3,
-                    Nombre: null,
-                    Apellido: null,
-                    Correo: null,
-                    Telefono: null,
-                    DPI: null,
-                    Registro: null,
+                    Nombre: this.solicitudActiva.Nombre,
+                    Apellido: this.solicitudActiva.Apellido,
+                    Correo: this.solicitudActiva.Correo,
+                    Telefono: this.solicitudActiva.Telefono,
+                    DPI: this.solicitudActiva.DPI,
+                    Registro: this.solicitudActiva.Registro,
                     IdSolicitud: this.solicitudActiva.IdSolicitudCuenta,
                     Estado: estado,
                     MotivoRechazo: motivo,
+                    Usuarios: this.usuariosEncontrados
                 })
                 .then(resp => {
                     if (resp.data.length > 0) {
-                        console.log(resp.data)
                         this.rechazado = false // Se cambia el valor de la variable del modal de motivo de rechazo por si se está rechazando la solicitud
                         this.visualizarSolicitud = false // Se cambia el valor del modal que muestra la información de la solicitud
+                        this.rechazoSolicitud.Motivo = null
+                        if (estado == 2) {
+                            this.$vs.dialog({
+                            type: 'alert',
+                            color: '#ed8c72',
+                            title: 'Cuenta creada',
+                            acceptText: 'Aceptar',
+                            text: 'La cuenta ha sido creada para el CUI ' + this.solicitudActiva.DPI,
+                            buttonCancel: 'border',
+                            accept: () => {},
+                        })
+                        }
                         this.cargarSolicitudes()
                     }
                 })
-                
+
         },
 
         verSolicitud(e) {
+            // this.solicitudActiva = e
             this.solicitudActiva.Nombre = e.Nombre
             this.solicitudActiva.Apellido = e.Apellido
             this.solicitudActiva.Registro = e.Registro
             this.solicitudActiva.DPI = e.DPI
             this.solicitudActiva.IdSolicitudCuenta = e.IdSolicitudCuenta
+            this.solicitudActiva.Telefono = e.Telefono
+            this.solicitudActiva.Correo = e.Correo
 
             this.visualizarSolicitud = true
             this.buscarUsuario()
@@ -264,13 +297,16 @@ export default {
                 })
                 .then((resp) => {
                     if (resp.data.length > 0) {
-                        this.usuarioEncontrado = resp.data[0] //Se deja con posición 0 por si trae más de 1 registro
+
+                        this.usuariosEncontrados = resp.data
+                        this.usuarioEncontrado = this.usuariosEncontrados[0] //Se deja con posición 0 por si trae más de 1 registro
 
                         this.solicitudActiva.NombreUsuario = this.usuarioEncontrado.Nombre
                         this.solicitudActiva.ApellidoUsuario = this.usuarioEncontrado.Apellido
                         this.solicitudActiva.RegistroUsuario = this.usuarioEncontrado.Registro
                         this.solicitudActiva.DPIUsuario = this.usuarioEncontrado.DPI
                         this.solicitudActiva.IdUsuario = this.usuarioEncontrado.IdUsuario
+                        this.solicitudActiva.TipoUsuario = this.usuarioEncontrado.TipoUsuario
                     } else {
                         // MOSTRAR UN MENSAJE DE ERROR PARA QUE PUEDAN BUSCAR EL USUARIO
                     }
@@ -286,10 +322,41 @@ export default {
             this.solicitudActiva.IdUsuario = e.IdUsuario
 
             this.usuarioComponente = false
-        }
+        },
     },
     mounted() {
         this.cargarSolicitudes()
     },
 }
 </script>
+
+<style>
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.button {
+    height: 75px;
+    width: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px !important;
+}
+
+.button:hover {
+    background-color: rgb(0, 129, 151) !important;
+}
+
+.div-button {
+    display: flex;
+    justify-content: center;
+}
+
+.i-size {
+    font-size: 20px;
+    padding-bottom: 5px;
+}
+</style>
