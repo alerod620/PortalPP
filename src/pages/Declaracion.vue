@@ -18,7 +18,7 @@
                     <DxItem :col-span="3" data-field="Direccion" editor-type="dxTextBox" :validationRules="[{ type: 'required' }]">
                         <DxLabel text="Dirección" />
                     </DxItem>
-                    <DxItem data-field="Telefono" editor-type="dxTextBox" :editor-options="{ mask: '0000 0000', maskChar: '_', inputMode: 'numeric', maxLength: 8, minLength: 8 }" :validationRules="[{ type: 'required' }, { type: 'custom', validationCallback: validarTelefonoFijo, message: 'El número de teléfono fijo debe iniciar con 2, 6 o 7 y tener 8 dígitos' }]">
+                    <DxItem data-field="Telefono" editor-type="dxTextBox" :editor-options="{ mask: '0000 0000', maskChar: '_', inputMode: 'numeric', maxLength: 8, minLength: 8 }" :validationRules="[{ type: 'custom', validationCallback: validarTelefonoFijo, message: 'El número de teléfono fijo debe iniciar con 2, 6 o 7 y tener 8 dígitos' }]">
                         <DxLabel text="Teléfono fijo" />
                     </DxItem>
                     <DxItem data-field="Celular" editor-type="dxTextBox" :editor-options="{ mask: '0000 0000', maskChar: '_', inputMode: 'numeric', maxLength: 8, minLength: 8 }" :validationRules="[{ type: 'required' }, { type: 'custom', validationCallback: validarTelefonoCelular, message: 'El número de celular debe iniciar con 3, 4 o 5 y tener 8 dígitos' }]" />
@@ -35,7 +35,7 @@
                     <DxItem data-field="FechaIngresoUsac" editor-type="dxDateBox" :editor-options="editorOptionsFecha" :validation-rules="[{ type: 'required' }]">
                         <DxLabel text="Fecha de ingreso a la USAC" />
                     </DxItem>
-                    <DxItem data-field="FechaJubilacion" editor-type="dxDateBox" :editor-options="editorOptionsFecha" :validation-rules="[{ type: 'required' }]">
+                    <DxItem data-field="FechaJubilacion" editor-type="dxDateBox" :editor-options="editorOptionsFecha">
                         <DxLabel text="Fecha de ingreso al plan como jubilado" />
                     </DxItem>
                     <DxItem :col-span="2" data-field="Programa" editor-type="dxRadioGroup" :editor-options="{ width: 'auto', layout: 'horizontal', searchEnabled: true, items: programas,  displayExpr: 'Programa', valueExpr: 'Valor' }" :validation-rules="[{ type: 'required' }]" />
