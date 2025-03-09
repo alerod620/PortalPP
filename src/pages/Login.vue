@@ -8,15 +8,17 @@
                         <div v-if="verInicioSesion" class="form-container">
                             <DxForm :form-data.sync="loginUsuario" labelMode="floating" labelLocation="top">
                                 <DxGroupItem item-type="group">
-                                    <DxItem data-field="DPI" editor-type="dxTextBox" />
+                                    <DxItem data-field="CUI" editor-type="dxTextBox" />
                                     <DxItem data-field="Contraseña" editor-type="dxTextBox" :editor-options="{ mode:'password' }" />
                                 </DxGroupItem>
+
+                                <DxButtonItem :button-options="loginButtonOptions" horizontal-alignment="center" verical-alignment="center" />
                             </DxForm>
-                            <div class="mt-4" style="display: flex; justify-content: center;">
+                            <!-- <div class="mt-4" style="display: flex; justify-content: center;">
                                 <vs-button class="buttonInicioSesion" color="success" type="filled">
                                     <span>Iniciar sesión</span>
                                 </vs-button>
-                            </div>
+                            </div> -->
                             <div class="mt-4" style="display: flex; justify-content: center;">
                                 <vs-button type="line" @click="() => { recuperarContraseña = true }">
                                     <span>Olvidé mi contraseña</span>
@@ -146,6 +148,13 @@ export default {
                 // icon: 'save',
                 useSubmitBehavior: true,
             },
+
+            loginButtonOptions: {
+                text: 'Iniciar sesión',
+                type: 'success',
+                // icon: 'save',
+                useSubmitBehavior: true,
+            },
         };
     },
     methods: {
@@ -161,8 +170,10 @@ export default {
 
         handleSubmit(e) {
             e.preventDefault()
-            if (this.verInicioSesion) {
 
+            //Validación para definir qué acción debe hacer cuando de click al botón del formulario
+            if (this.verInicioSesion) {
+                this.login()
             } else {
                 this.verificarCUI()
                 // this.crearSolicitud()
@@ -218,6 +229,32 @@ export default {
             this.registroUsuario.Telefono = null
             this.registroUsuario.DPI = null
             this.registroUsuario.Registro = null
+        },
+
+        login()
+        {
+            axios.post('http://localhost:3000/api/Login', {
+                    CUI: this.loginUsuario.CUI,
+                    Password: this.loginUsuario.Contraseña
+                })
+                .then(resp => {
+                    if (!resp.data.error) {
+                        console.log(resp.data)
+                        localStorage.setItem("token", resp.data.token);
+                        localStorage.setItem("usuarios", JSON.stringify(resp.data.data.Usuarios));
+                    }
+                    else{
+                        this.$vs.dialog({
+                            type: 'alert',
+                            color: '#ed8c72',
+                            title: 'Credeciales erroneas',
+                            acceptText: 'Aceptar',
+                            text: 'CUI o contraseña erróneos. Intentelo nuevamente',
+                            buttonCancel: 'border',
+                            accept: () => {},
+                        })
+                    }
+                })
         }
     },
     computed: {
