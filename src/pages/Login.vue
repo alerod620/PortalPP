@@ -240,14 +240,17 @@ export default {
                 .then(resp => {
                     if (!resp.data.error) {
                         console.log(resp.data)
-                        localStorage.setItem("token", resp.data.token);
+                        localStorage.setItem("authToken", resp.data.token);
                         localStorage.setItem("usuarios", JSON.stringify(resp.data.data.Usuarios));
+
+                        const redirectPath = this.$route.query.redirect || "/dashboard";
+                        this.$router.push(redirectPath);
                     }
                     else{
                         this.$vs.dialog({
                             type: 'alert',
                             color: '#ed8c72',
-                            title: 'Credeciales erroneas',
+                            title: 'Credeciales erróneas',
                             acceptText: 'Aceptar',
                             text: 'CUI o contraseña erróneos. Intentelo nuevamente',
                             buttonCancel: 'border',

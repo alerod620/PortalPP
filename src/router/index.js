@@ -9,4 +9,18 @@ const router = new VueRouter({
   linkActiveClass: "active",
 });
 
+// Función para verificar si el usuario está autenticado
+function isAuthenticated() {
+  // Implementa la lógica de autenticación, por ejemplo, verificar un token en localStorage
+  return !!localStorage.getItem("authToken");
+}
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated()) {
+    next({ name: "Login", query: { redirect: to.fullPath } }); // Guarda la ruta de origen
+  } else {
+    next();
+  }
+});
+
 export default router;

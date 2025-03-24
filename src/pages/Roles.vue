@@ -1,6 +1,6 @@
 <template>
 <div>
-    <card title="Permisos">
+    <card title="Roles">
         <div class="row p-2" style="display: grid; place-items: center;" width="100%">
             <DxDataGrid :ref="tablaRoles" v-bind="DefaultDxGridConfiguration" :data-source="roles" :filter-sync-enabled="true" :headerFilter="{ visible: true, allowSearch: true }" :searchPanel="{ visible: true }" :height="'100%'" :width="'100%'" :on-row-inserting="crearRol" :on-row-inserted="cargarRol" :on-row-updating="editarRol" :on-row-updated="cargarRol" :on-row-removing="eliminarRol" :on-row-removed="cargarRol">
                 <DxSelection mode="single" />
