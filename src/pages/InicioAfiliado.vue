@@ -1,6 +1,6 @@
 <template>
 <div>
-    <card title="Solicitudes">
+    <card title="">
         <div class="row p-2" style="display: grid; place-items: center;">
             <DxCircularGauge id="gauge" :value="aportaciones" :subvalues="[aportaciones]">
                 <DxScale :start-value="0" :end-value="400" :tick-interval="50" >
