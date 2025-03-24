@@ -19,51 +19,56 @@ import Roles from "@/pages/Roles.vue";
 import Publicaciones from "@/pages/Publicaciones.vue";
 import Publicacion from "@/pages/Publicacion.vue";
 import Recibos from "@/pages/Recibos.vue";
+import Nosotros from "@/pages/Nosotros.vue";
+import Contactenos from "@/pages/Contactenos.vue";
+import Login from "@/pages/Login.vue";
+import Inicio from "@/pages/Inicio.vue";
 // import DeclaracionBeneficiarios from "@/pages/DeclaracionBeneficiarios.vue";
 import Declaracion from "@/pages/Declaracion.vue";
-import Inicio from "@/pages/InicioAfiliado.vue";
+import InicioAfiliado from "@/pages/InicioAfiliado.vue";
 import Landing from "@/pages/Landingpage.vue";
 
 const routes = [
   {
     path: "/",
-    component: DashboardLayout,
-    redirect: "/menu",
+    name: "Inicio",
+    component: Landing,
     children: [
       {
-        path: "dashboard",
-        name: "dashboard",
-        component: Dashboard,
+        path: "",
+        name: "Inicio",
+        component: Inicio,
       },
       {
-        path: "stats",
-        name: "stats",
-        component: UserProfile,
+        path: "/login",
+        name: "Login",
+        component: Login,
       },
       {
-        path: "notifications",
-        name: "notifications",
-        component: Notifications,
+        path: "/nosotros",
+        name: "Nosotros",
+        component: Nosotros,
       },
       {
-        path: "icons",
-        name: "icons",
-        component: Icons,
+        path: "/contacto",
+        name: "Contáctenos",
+        component: Contactenos,
       },
       {
-        path: "maps",
-        name: "maps",
-        component: Maps,
+        path: "/circulares",
+        name: "Publicaciones",
+        component: Publicaciones,
       },
+    ]
+  },
+  {
+    path: "/dashboard",
+    component: DashboardLayout,
+    children: [
       {
-        path: "typography",
-        name: "typography",
-        component: Typography,
-      },
-      {
-        path: "table-list",
-        name: "table-list",
-        component: TableList,
+        path: "",
+        name: "inicio",
+        component: InicioAfiliado,
       },
       {
         path: "usuarios",
@@ -98,7 +103,7 @@ const routes = [
       {
         path: "publicaciones",
         name: "publicaciones",
-        component: Publicaciones,
+        component: Roles,
       },
       {
         path: "publicacion",
@@ -126,6 +131,7 @@ const routes = [
         component: Landing,
       },
     ],
+    // meta: { requiresAuth: true },
   },
   { path: "*", component: NotFound },
 ];
@@ -140,3 +146,6 @@ function view(name) {
 };**/
 
 export default routes;
+
+// Rutas fuera del Dashboard (mantenidas automáticamente)
+export const rutasPublicas = ["/", "/login"];
