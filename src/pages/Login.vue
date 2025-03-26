@@ -8,8 +8,8 @@
                         <div v-if="verInicioSesion" class="form-container">
                             <DxForm :form-data.sync="loginUsuario" labelMode="floating" labelLocation="top">
                                 <DxGroupItem item-type="group">
-                                    <DxItem data-field="CUI" editor-type="dxTextBox" />
-                                    <DxItem data-field="Contraseña" editor-type="dxTextBox" :editor-options="{ mode:'password' }" />
+                                    <DxItem data-field="CUI" editor-type="dxTextBox" :editor-options="{ mask: '0000 00000 0000', maskChar: '_', inputMode: 'numeric' }" :validationRules="[{ type: 'required', message: 'El CUI es obligatorio.' }, { type: 'custom', validationCallback: validarDPI, message: 'El DPI no es válido.' }]" />
+                                    <DxItem data-field="Contraseña" editor-type="dxTextBox" :editor-options="{ mode:'password' }" :validationRules="[{ type: 'required', message: 'La contraseña es obligatoria.' }]" />
                                 </DxGroupItem>
 
                                 <DxButtonItem :button-options="loginButtonOptions" horizontal-alignment="center" verical-alignment="center" />
@@ -71,31 +71,28 @@
         </vs-col>
     </vs-row>
 
-    <DxPopup width="auto" height="auto" :show-title="false" :drag-enabled="false" :hide-on-outside-click="false" :show-close-button="false" :visible="recuperarContraseña">
+    <DxPopup width="auto" height="auto" :show-title="true" :drag-enabled="true" :hide-on-outside-click="true" :showCloseButton="true" title="Reestsablecer contraseña" :visible.sync="recuperarContraseña">
         <template #content>
-            <div>
+            <form @submit="submitResstablecerPass">
                 <div class="imagenLogo mb-2">
                     <!-- <img :src="require('@/assets/images/CitasWeb/Logo.png')" width="300"> -->
                 </div>
                 <div class="mensajeRecuperarContraseña">
                     <span>
-                        Para reestablecer tu contraseña, ingresa el correo electrónico con el que creaste tu cuenta.<br><br>
-                        Te enviaremos instrucciones para restablecer tu contraseña.
+                        Para reestablecer tu contraseña, ingresa tu número de CUI con el que está registrada tu cuenta.<br><br>
+                        Te enviaremos un correo con una nueva contraseña para ingresar al sistema.
                     </span>
                 </div>
                 <div class="mt-4" style="display:grid; align-items: center; justify-content:center;">
                     <DxForm :form-data.sync="recuperarCuenta" labelMode="outside" labelLocation="top">
                         <DxGroupItem item-type="group">
-                            <DxItem data-field="Correo" editor-type="dxTextBox" />
+                            <DxItem data-field="CUI" editor-type="dxTextBox" :editor-options="{ mask: '0000 00000 0000', maskChar: '_', inputMode: 'numeric' }" :validationRules="[{ type: 'required', message: 'El CUI es obligatorio.' }, { type: 'custom', validationCallback: validarDPI, message: 'El DPI no es válido.' }]" />
+                            
+                            <DxButtonItem :button-options="restablecerButtonOptions" horizontal-alignment="center" verical-alignment="center" />
                         </DxGroupItem>
                     </DxForm>
                 </div>
-                <div class="mt-4" style="display: flex; justify-content: center;">
-                    <vs-button color="success" type="filled" style="width: 250px; size: 20px" @click="mensajeAceptar">
-                        <span>Aceptar</span>
-                    </vs-button>
-                </div>
-            </div>
+            </form>
         </template>
     </DxPopup>
 </div>
@@ -139,7 +136,9 @@ export default {
             registroUsuario: {},
             recordarUsuario: false,
             recuperarContraseña: false,
-            recuperarCuenta: {},
+            recuperarCuenta: {
+                CUI: null
+            },
             verInicioSesion: true,
 
             solicitudButtonOptions: {
@@ -151,6 +150,13 @@ export default {
 
             loginButtonOptions: {
                 text: 'Iniciar sesión',
+                type: 'success',
+                // icon: 'save',
+                useSubmitBehavior: true,
+            },
+
+            restablecerButtonOptions: {
+                text: 'Reestablecer',
                 type: 'success',
                 // icon: 'save',
                 useSubmitBehavior: true,
@@ -180,6 +186,13 @@ export default {
             }
         },
 
+        submitResstablecerPass(e) {
+            e.preventDefault()
+
+            this.reestablecerPassword()
+        },
+
+        //Método para verificar si ya existe una cuenta con el CUI ingresado al solicitar la creación de una cuenta
         async verificarCUI()
         {
             await axios.post('http://localhost:3000/api/Cuentas', {
@@ -204,6 +217,31 @@ export default {
                 })
         },
 
+        //Método para verificar si ya existe una cuenta con el CUI ingresado al solicitar que se reestrablezca la cuenta
+        async verificarCUIReestablecer()
+        {
+            await axios.post('http://localhost:3000/api/Cuentas', {
+                    Opcion: 5,
+                    CUI: this.registroUsuario.DPI,
+                })
+                .then(resp => {
+                    if (resp.data.length > 0) {
+                        
+                    }
+                    else{
+                        this.$vs.dialog({
+                            type: 'alert',
+                            color: '#ed8c72',
+                            title: 'Cuenta no encontrada',
+                            acceptText: 'Aceptar',
+                            text: 'No existe una cuenta existente con el CUI/DPI ingresado',
+                            buttonCancel: 'border',
+                            accept: () => {},
+                        })
+                    }
+                })
+        },
+
         crearSolicitud() {
             axios.post('http://localhost:3000/api/Solicitudes', {
                     Opcion: 2,
@@ -217,6 +255,15 @@ export default {
                 .then(resp => {
                     if (resp.data.length > 0) {
                         this.formSolicitudInstance.resetValues()
+                        this.$vs.dialog({
+                            type: 'alert',
+                            color: '#ed8c72',
+                            title: 'Solicitud exitosa',
+                            acceptText: 'Aceptar',
+                            text: 'Su solicitud ha sido enviada con éxito',
+                            buttonCancel: 'border',
+                            accept: () => {},
+                        })
                     }
                 })
         },
@@ -239,7 +286,6 @@ export default {
                 })
                 .then(resp => {
                     if (!resp.data.error) {
-                        console.log(resp.data)
                         localStorage.setItem("authToken", resp.data.token);
                         localStorage.setItem("usuarios", JSON.stringify(resp.data.data.Usuarios));
 
@@ -258,6 +304,71 @@ export default {
                         })
                     }
                 })
+                .catch(error => {
+                        if(error.code == 401)
+                        {
+                            this.$vs.dialog({
+                                type: 'alert',
+                                color: '#ed8c72',
+                                title: 'Credeciales erróneas',
+                                acceptText: 'Aceptar',
+                                text: 'CUI o contraseña erróneos. Intentelo nuevamente',
+                                buttonCancel: 'border',
+                                accept: () => {},
+                            })
+                        }
+                        
+                    }
+                )
+        },
+
+        reestablecerPassword()
+        {
+            axios.post('http://localhost:3000/api/ReestablecerPassword', {
+                    CUI: this.recuperarCuenta.CUI
+                })
+                .then(resp => {
+                    if (!resp.data.error) {
+                        this.recuperarContraseña = false
+                        this.recuperarCuenta.CUI = null
+                        this.$vs.dialog({
+                            type: 'alert',
+                            color: '#ed8c72',
+                            title: 'Credeciales modificadas',
+                            acceptText: 'Aceptar',
+                            text: 'Se ha enviado un correo con sus nuevas credenciales.',
+                            buttonCancel: 'border',
+                            accept: () => {},
+                        })
+                    }
+                    else{
+                        this.$vs.dialog({
+                            type: 'alert',
+                            color: '#ed8c72',
+                            title: 'Cuenta no existente',
+                            acceptText: 'Aceptar',
+                            text: 'No existe ninguna cuenta con el CUI ingresado',
+                            buttonCancel: 'border',
+                            accept: () => {},
+                        })
+                    }
+                })
+                .catch(error => {
+                        if(error.code == 401)
+                        {
+                            this.$vs.dialog({
+                                type: 'alert',
+                                color: '#ed8c72',
+                                title: 'Cuenta no existente',
+                                acceptText: 'Aceptar',
+                                text: 'No existe ninguna cuenta con el CUI ingresado',
+                                buttonCancel: 'border',
+                                accept: () => {},
+                            })
+                        }
+                        
+                    }
+                )
         }
     },
     computed: {
