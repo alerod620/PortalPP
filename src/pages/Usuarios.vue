@@ -11,7 +11,7 @@
 
                 <DxColumn width="auto" data-field="Nombre" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="Apellido" data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="Correo" data-type="string" alignment="center" />
+                <!-- <DxColumn width="auto" data-field="Correo" data-type="string" alignment="center" /> -->
                 <DxColumn width="auto" data-field="Registro" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="Partida" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="Plaza" data-type="string" alignment="center" />
@@ -71,32 +71,6 @@ export default {
                         this.usuarios = resp.data
                     }
                 });
-
-            // this.usuarios = [{
-            //         Nombre: 'Juan',
-            //         Apellido: 'Perez',
-            //         CUI: 1234567980000,
-            //         Partida: 123456,
-            //         Plaza: 123456,
-            //         Registro: 123456
-            //     },
-            //     {
-            //         Nombre: 'Pedro',
-            //         Apellido: 'Sanchez',
-            //         CUI: 9876543210000,
-            //         Partida: 654321,
-            //         Plaza: 321654,
-            //         Registro: 456254
-            //     },
-            //     {
-            //         Nombre: 'Pablo',
-            //         Apellido: 'Trejo',
-            //         CUI: 5748464354313,
-            //         Partida: 579548,
-            //         Plaza: 6584897,
-            //         Registro: 654712
-            //     }
-            // ]
         },
 
         seleccionarUsuario(e) {

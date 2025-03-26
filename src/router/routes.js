@@ -103,7 +103,7 @@ const routes = [
       {
         path: "publicaciones",
         name: "publicaciones",
-        component: Roles,
+        component: Publicaciones,
       },
       {
         path: "publicacion",

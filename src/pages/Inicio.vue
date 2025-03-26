@@ -3,13 +3,13 @@
     <h1>Bienvenidos al Portal</h1>
     <p>¡Explora nuestras opciones y conoce más sobre el Plan de Prestaciones!</p>
 
-    <DxGallery :items="carouselItems" :show-nav-buttons="true" height="400px">
-      <template #item="{ item }">
+    <DxGallery :items="carouselItems" :show-nav-buttons="true" height="500px" :loop="true" :slideshow-delay="2000">
+      <template #item="{ data }">
         <div class="carousel-item">
-          <img :src="require(`../assets/img/${item.image}`)"  />
+          <img :src="require(`@/assets/img/${data.image}`)"  />
           <div class="carousel-caption">
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.description }}</p>
+            <!-- <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p> -->
           </div>
         </div>
       </template>
@@ -36,12 +36,12 @@ export default {
         {
           title: 'Servicios',
           description: 'Accede a los diferentes servicios y programas que ofrecemos a nuestros afiliados.',
-          image: 'usac.jpg',
+          image: 'usac2.jpeg',
         },
         {
           title: 'Noticias',
           description: 'Mantente informado sobre las últimas noticias y circulares importantes.',
-          image: 'usac.jpg',
+          image: 'usac3.jpg',
         },
       ],
     };
