@@ -32,6 +32,11 @@ export const DefaultDxGridConfiguration = {
 export function validarTelefonoFijo(e) {
   const telefono = e.value;
 
+  // Si el campo está vacío o solo contiene espacios, se considera válido (opcional)
+  if (!telefono || telefono.trim() === '') {
+    return true;
+  }
+
   // Validar formato del número fijo
   const telefonoRegExp = /^[2,6,7][0-9]{7}$/;
   return telefonoRegExp.test(telefono);

@@ -108,15 +108,21 @@ export default {
   },
   methods: {
     findActiveLink() {
-      this.links.forEach((link, index) => {
-        if (link.isActive()) {
-          this.activeLinkIndex = index;
-        }
-      });
+      setTimeout(() => { //Se agregó la espera para que espere a qué se le asigne el estilo 'active'
+        this.links.forEach((link, index) => {
+          if (link.isActive()) {
+            this.activeLinkIndex = index;
+          }
+        });
+      }, 100);
+      
+      //this.links.find(t=>t.isActive())
     },
     addLink(link) {
+      console.log('link',link)
       const index = this.$slots.links.indexOf(link.$vnode);
       this.links.splice(index, 0, link);
+      console.log(this.links)
     },
     removeLink(link) {
       const index = this.links.indexOf(link);

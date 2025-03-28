@@ -2,7 +2,7 @@
 <div>
     <card title="Declaración de beneficiarios">
         <form @submit="handleSubmit">
-            <DxForm :ref="formularioDependencia" :form-data.sync="formulario" label-mode="floating">
+            <DxForm :ref="formularioDependencia" :form-data.sync="formulario" label-mode="floating" class="uppercase">
                 <DxGroupItem :col-count="3" caption="Datos personales">
                     <!-- Campo para seleccionar el departamento -->
                     <DxItem data-field="Departamento" editor-type="dxSelectBox" :editor-options="{ width: 'auto', searchEnabled: true, items: departamentos,  displayExpr: 'Nombre', valueExpr: 'Nombre', onValueChanged: seleccionDepartamento }" :validation-rules="[{ type: 'required', message: 'El departamento es obligatorio' }]">
@@ -48,24 +48,26 @@
                         <DxItem data-field="CUIViudez" editor-type="dxTextBox" :editor-options="{ mask: '0000 00000 0000', maskChar: '_', inputMode: 'numeric' }" :validationRules="[{ type: 'required', message: 'El CUI es obligatorio.' }, { type: 'custom', validationCallback: validarDPI, message: 'El DPI no es válido.' }]">
                             <DxLabel text="CUI" />
                         </DxItem>
-                        <DxItem data-field="Parentesco" editor-type="dxTextBox" :validationRules="[{ type: 'required' } ]" />
-                        <DxItem data-field="Edad" editor-type="dxNumberBox" :editor-options="{ showSpinButtons: true, max: 120, min: 1 }" :validationRules="[{ type: 'required' } ]" :value="null">
-                            <DxLabel text="Edad (años)" />
-                        </DxItem>
-                        <DxItem data-field="FechaNacimientoViudez" editor-type="dxDateBox" :editor-options="editorOptionsFecha" :validation-rules="[{ type: 'required' }]">
-                            <DxLabel text="Fecha de nacimiento" />
-                        </DxItem>
 
                         <DxItem :col-span="3" data-field="DireccionViudez" editor-type="dxTextBox" :validationRules="[{ type: 'required' }]">
                             <DxLabel text="Dirección" />
                         </DxItem>
-                        <DxItem data-field="TelefonoViudez" editor-type="dxTextBox" :editor-options="{ mask: '0000 0000', maskChar: '_', inputMode: 'numeric', maxLength: 8, minLength: 8 }" :validationRules="[{ type: 'required' }, { type: 'custom', validationCallback: validarTelefonoFijo, message: 'El número de teléfono fijo debe iniciar con 2, 6 o 7 y tener 8 dígitos' }]">
+
+                        <DxItem data-field="Parentesco" editor-type="dxSelectBox" :editor-options="{ width: 'auto', layout: 'horizontal', searchEnabled: true, items: viudez,  displayExpr: 'Parentesco', valueExpr: 'Parentesco' }" :validationRules="[{ type: 'required' } ]" />
+                        <!-- <DxItem data-field="Edad" editor-type="dxNumberBox" :editor-options="{ showSpinButtons: true, max: 120, min: 1 }" :validationRules="[{ type: 'required' } ]" :value="null">
+                        <DxLabel text="Edad (años)" />
+                        </DxItem> -->
+                        <DxItem data-field="FechaNacimientoViudez" editor-type="dxDateBox" :editor-options="editorOptionsFecha" :validation-rules="[{ type: 'required' }]">
+                            <DxLabel text="Fecha de nacimiento" />
+                        </DxItem>
+
+                        <DxItem data-field="TelefonoViudez" editor-type="dxTextBox" :editor-options="{ mask: '0000 0000', maskChar: '_', inputMode: 'numeric', maxLength: 8, minLength: 8 }" :validationRules="[{ type: 'custom', validationCallback: validarTelefonoFijo, message: 'El número de teléfono fijo debe iniciar con 2, 6 o 7 y tener 8 dígitos' }]">
                             <DxLabel text="Teléfono fijo" />
                         </DxItem>
                         <DxItem data-field="CelularViudez" editor-type="dxTextBox" :editor-options="{ mask: '0000 0000', maskChar: '_', inputMode: 'numeric', maxLength: 8, minLength: 8 }" :validationRules="[{ type: 'required' }, { type: 'custom', validationCallback: validarTelefonoCelular, message: 'El número de celular debe iniciar con 3, 4 o 5 y tener 8 dígitos' }]">
                             <DxLabel text="Celular" />
                         </DxItem>
-                        <DxItem data-field="CorreoViudez" editor-type="dxTextBox" :validationRules="[{ type: 'required' }, { type: 'email', message: 'Correo no válido.' }]" >
+                        <DxItem data-field="CorreoViudez" editor-type="dxTextBox" :validationRules="[{ type: 'required' }, { type: 'email', message: 'Correo no válido.' }]">
                             <DxLabel text="Correo electrónico" />
                         </DxItem>
                     </DxGroupItem>
@@ -172,9 +174,8 @@ export default {
             },
 
             departamentos: Departamentos.map((dep) => ({
-                Nombre: dep.title,
+                Nombre: dep.title.toUpperCase(),
                 Municipios: dep.mun,
-                Edad: null
             })),
 
             municipios: [],
@@ -211,35 +212,45 @@ export default {
             municipioSeleccionado: null,
 
             estadoCivil: [{
-                    Estado: 'Soltero(a)',
+                    Estado: 'SOLTERO(A)',
                     Valor: 1
                 },
                 {
-                    Estado: 'Casado(a)',
+                    Estado: 'CASADO(A)',
                     Valor: 2
                 },
                 {
-                    Estado: 'Unido(a)',
+                    Estado: 'UNIDO(A)',
                     Valor: 3
                 },
             ],
 
             programas: [{
-                    Programa: 'Docencia',
+                    Programa: 'DOCENCIA',
                     Valor: 1
                 },
                 {
-                    Programa: 'Administración',
+                    Programa: 'ADMINISTRACIÓN',
                     Valor: 2
                 },
                 {
-                    Programa: 'Investigación',
+                    Programa: 'INVESTIGACIÓN',
                     Valor: 3
                 },
                 {
-                    Programa: 'Extensión',
+                    Programa: 'EXTENSIÓN',
                     Valor: 4
                 }
+            ],
+
+            viudez: [{
+                    Parentesco: 'ESPOSO',
+                    Valor: 1
+                },
+                {
+                    Parentesco: 'ESPOSA',
+                    Valor: 2
+                },
             ],
 
             huerfanos: []
@@ -265,7 +276,7 @@ export default {
             if (depSeleccionado) {
                 // Actualiza los municipios basados en el departamento seleccionado
                 this.municipios = depSeleccionado.Municipios.map((mun) => ({
-                    Nombre: mun
+                    Nombre: mun.toUpperCase()
                 }))
                 this.departamentoSeleccionado = departamento // Marca el departamento como seleccionado
                 this.formulario.Municipio = null // Resetea el campo Municipio
@@ -292,29 +303,28 @@ export default {
                         Departamento: this.formulario.Departamento,
                         Municipio: this.formulario.Municipio,
                         FechaNacimiento: this.formulario.FechaNacimiento,
-                        Direccion: this.formulario.Direccion,
+                        Direccion: this.formulario.Direccion.toUpperCase(),
                         CUI: '3016860170101',
                         Telefono: this.formulario.Telefono,
                         Celular: this.formulario.Celular,
                         CorreoElectronico: 'prueba@prueba.com',
                         EstadoCivil: this.formulario.EstadoCivil,
                         Sexo: 1,
-                        Puesto: this.formulario.PuestoDesempeña,
-                        Dependencia: this.formulario.Dependencia,
+                        Puesto: this.formulario.PuestoDesempeña.toUpperCase(),
+                        Dependencia: this.formulario.Dependencia.toUpperCase(),
                         FechaIngresoUsac: this.formulario.FechaIngresoUsac,
                         FechaJubilacion: this.formulario.FechaJubilacion,
                         Programa: this.formulario.Programa,
-                        NombreViudez: this.formulario.NombreViudez,
+                        NombreViudez: this.formulario.NombreViudez.toUpperCase(),
                         CUIViudez: this.formulario.CUIViudez,
-                        Parentesco: this.formulario.Parentesco,
-                        Edad: this.formulario.Edad,
+                        Parentesco: this.formulario.Parentesco.toUpperCase(),
+                        // Edad: this.formulario.Edad,
                         FechaNacimientoViudez: this.formulario.FechaNacimientoViudez,
-                        DireccionViudez: this.formulario.DireccionViudez,
+                        DireccionViudez: this.formulario.DireccionViudez.toUpperCase(),
                         TelefonoViudez: this.formulario.TelefonoViudez,
                         CelularViudez: this.formulario.CelularViudez,
-                        CorreoViudez: this.formulario.CorreoViudez
-                    },
-                    {
+                        CorreoViudez: this.formulario.CorreoViudez.toUpperCase()
+                    }, {
                         responseType: 'arraybuffer',
                     } // Configuración de Axios
                 )
@@ -390,5 +400,9 @@ export default {
     bottom: 35px;
     padding: 3px;
     z-index: 9999 !important;
+}
+
+.uppercase input {
+    text-transform: uppercase;
 }
 </style>
