@@ -271,7 +271,6 @@ export default {
         seleccionDepartamento(e) {
             const departamento = e.value; // Obtiene el valor seleccionado
             const depSeleccionado = this.departamentos.find((d) => d.Nombre === departamento);
-            console.log(depSeleccionado)
 
             if (depSeleccionado) {
                 // Actualiza los municipios basados en el departamento seleccionado
@@ -329,7 +328,6 @@ export default {
                     } // Configuración de Axios
                 )
                 .then(resp => {
-                    console.log(resp)
                     if (resp.status === 200) {
                         // Convertir el array buffer a un Blob
                         const blob = new Blob([resp.data], {

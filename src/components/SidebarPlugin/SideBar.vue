@@ -11,7 +11,7 @@
     <!-- -->
     <div class="sidebar-wrapper" id="style-3">
       <div class="logo">
-        <a href="#/dashboard" class="simple-text">
+        <a href="#/dashboard/inicio" class="simple-text">
           <div class="logo-img">
             <img src="@/assets/img/usac-logo.svg" alt="" />
           </div>
@@ -119,10 +119,8 @@ export default {
       //this.links.find(t=>t.isActive())
     },
     addLink(link) {
-      console.log('link',link)
       const index = this.$slots.links.indexOf(link.$vnode);
       this.links.splice(index, 0, link);
-      console.log(this.links)
     },
     removeLink(link) {
       const index = this.links.indexOf(link);

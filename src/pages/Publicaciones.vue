@@ -99,7 +99,6 @@ export default {
         },
 
         editarPublicacion(e, vista) {
-            console.log(e)
             this.publicacionSeleccionada = e
             this.publicacionSeleccionada.Activa = e.Estado == 1 ? true : false
             this.vista = vista

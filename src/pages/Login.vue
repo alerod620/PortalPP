@@ -289,7 +289,7 @@ export default {
                         localStorage.setItem("authToken", resp.data.token);
                         localStorage.setItem("usuarios", JSON.stringify(resp.data.data.Usuarios));
 
-                        const redirectPath = this.$route.query.redirect || "/dashboard";
+                        const redirectPath = this.$route.query.redirect || "/dashboard/inicio";
                         this.$router.push(redirectPath);
                     }
                     else{

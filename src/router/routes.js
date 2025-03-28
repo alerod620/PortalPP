@@ -66,7 +66,7 @@ const routes = [
     component: DashboardLayout,
     children: [
       {
-        path: "",
+        path: "inicio",
         name: "inicio",
         component: InicioAfiliado,
       },
