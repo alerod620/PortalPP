@@ -25,7 +25,7 @@
             <sidebar-link to="/inicio" name="Inicio" icon="tachometer" />
             <sidebar-link to="/landing" name="Landing page" icon="home" /> -->
         </template>
-        <mobile-menu>
+        <!-- <mobile-menu>
             <li class="nav-item">
                 <a class="nav-link">
                     <i class="ti-panel"></i>
@@ -46,7 +46,7 @@
                 </a>
             </li>
             <li class="divider"></li>
-        </mobile-menu>
+        </mobile-menu> -->
     </side-bar>
     <div class="main-panel">
         <top-navbar></top-navbar>
@@ -61,7 +61,7 @@
 <style lang="scss"></style>
 
 <script>
-//   import TopNavbar from "./TopNavbar.vue";
+import TopNavbar from "./TopNavbar.vue";
 import ContentFooter from "./ContentFooter.vue";
 import DashboardContent from "./Content.vue";
 import MobileMenu from "./MobileMenu";
@@ -70,7 +70,7 @@ import {
 } from "../../router/routes";
 export default {
     components: {
-        //   TopNavbar,
+          TopNavbar,
         ContentFooter,
         DashboardContent,
         MobileMenu,
@@ -89,17 +89,15 @@ export default {
             }
         },
         loadModules() {
-            let infoUsuario = localStorage.getItem("usuarios")
+            let infoUsuario = localStorage.getItem("usuarioActivo")
             if (infoUsuario) {
                 infoUsuario = JSON.parse(infoUsuario)
-                this.modulosDisponibles = infoUsuario[0].Roles[0].Modulos
-                this.permisosDisponibles = infoUsuario[0].Roles[0].Permisos
+                this.modulosDisponibles = infoUsuario.Roles[0].Modulos
+                this.permisosDisponibles = infoUsuario.Roles[0].Permisos
             } else {
                 this.modulosDisponibles = []
                 this.permisosDisponibles = []
             }
-            console.log(this.modulosDisponibles)
-            console.log(this.permisosDisponibles)
         },
         getDashboardRoute(ruta) {
             // Si la ruta es pública, la deja igual, si no, la anida bajo "/dashboard"

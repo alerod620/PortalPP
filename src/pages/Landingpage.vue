@@ -19,7 +19,7 @@
     <!-- Pie de Página -->
     <footer class="footer">
         <div class="footer-content">
-            <p>&copy; 2025 Universidad de San Carlos de Guatemala - Facultad de Ingeniería</p>
+            <p>&copy; 2025 Universidad de San Carlos de Guatemala - Plan de Prestaciones</p>
         </div>
     </footer>
 </div>

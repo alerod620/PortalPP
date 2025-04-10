@@ -12,7 +12,8 @@
       data-toggle="dropdown"
     >
       <slot name="title">
-        <i :class="icon"></i>
+        <font-awesome-icon v-if="icon" :icon="['fas', icon]" class="fa pt-1" />
+        <!-- <i :class="icon"></i> -->
         <span class="notification"
           >{{ title }}
           <b class="caret"></b>

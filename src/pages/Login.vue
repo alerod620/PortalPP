@@ -285,9 +285,11 @@ export default {
                     Password: this.loginUsuario.Contraseña
                 })
                 .then(resp => {
-                    if (!resp.data.error) {
+                    console.log(resp)
+                    if (!resp.data.error && !resp.error) {
                         localStorage.setItem("authToken", resp.data.token);
-                        localStorage.setItem("usuarios", JSON.stringify(resp.data.data.Usuarios));
+                        localStorage.setItem("cuenta", JSON.stringify(resp.data.data));
+                        localStorage.setItem("usuarioActivo", JSON.stringify(resp.data.data.Usuarios[0]));
 
                         const redirectPath = this.$route.query.redirect || "/dashboard/inicio";
                         this.$router.push(redirectPath);
@@ -305,21 +307,29 @@ export default {
                     }
                 })
                 .catch(error => {
-                        if(error.code == 401)
-                        {
-                            this.$vs.dialog({
-                                type: 'alert',
-                                color: '#ed8c72',
-                                title: 'Credeciales erróneas',
-                                acceptText: 'Aceptar',
-                                text: 'CUI o contraseña erróneos. Intentelo nuevamente',
-                                buttonCancel: 'border',
-                                accept: () => {},
-                            })
-                        }
-                        
-                    }
-                )
+                    if (error.response && error.response.status === 401) {
+                        this.$vs.dialog({
+                            type: 'alert',
+                            color: '#ed8c72',
+                            title: 'Credenciales erróneas',
+                            acceptText: 'Aceptar',
+                            text: error.response.data.error || 'CUI o contraseña erróneos. Inténtelo nuevamente',
+                            buttonCancel: 'border',
+                            accept: () => {},
+                        });
+                    } else {
+                        console.error('Error inesperado:', error);
+                        this.$vs.dialog({
+                            type: 'alert',
+                            color: 'danger',
+                            title: 'Error de servidor',
+                            acceptText: 'Aceptar',
+                            text: 'Ocurrió un error inesperado. Por favor, intente más tarde.',
+                            buttonCancel: 'border',
+                            accept: () => {},
+                        });
+                    }       
+                })
         },
 
         reestablecerPassword()
