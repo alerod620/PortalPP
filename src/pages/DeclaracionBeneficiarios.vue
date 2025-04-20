@@ -45,7 +45,6 @@ import {
     DxColumn,
     DxEditing,
     DxButton,
-    DxPopup,
 } from 'devextreme-vue/data-grid'
 
 import {
@@ -65,7 +64,6 @@ export default {
         DxColumn,
         DxEditing,
         DxButton,
-        DxPopup,
         DxForm,
         DxItem,
         DxGroupItem,

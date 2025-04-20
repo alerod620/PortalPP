@@ -118,6 +118,10 @@ import {
     DxToolbar,
     DxLabel
 } from 'devextreme-vue/data-grid'
+import {
+    DxTabs,
+    DxItem as DxTabsItem
+} from 'devextreme-vue/tabs';
 
 import {
     DxForm,
@@ -153,6 +157,8 @@ export default {
         DxButtonItem,
         DxToolbarItem,
         DxLabel,
+        DxTabs,
+        DxTabsItem,
         Usuarios
     },
     data() {
@@ -257,14 +263,14 @@ export default {
                         this.rechazoSolicitud.Motivo = null
                         if (estado == 2) {
                             this.$vs.dialog({
-                            type: 'alert',
-                            color: '#ed8c72',
-                            title: 'Cuenta creada',
-                            acceptText: 'Aceptar',
-                            text: 'La cuenta ha sido creada para el CUI ' + this.solicitudActiva.DPI,
-                            buttonCancel: 'border',
-                            accept: () => {},
-                        })
+                                type: 'alert',
+                                color: '#ed8c72',
+                                title: 'Cuenta creada',
+                                acceptText: 'Aceptar',
+                                text: 'La cuenta ha sido creada para el CUI ' + this.solicitudActiva.DPI,
+                                buttonCancel: 'border',
+                                accept: () => {},
+                            })
                         }
                         this.cargarSolicitudes()
                     }
@@ -327,6 +333,11 @@ export default {
     mounted() {
         this.cargarSolicitudes()
     },
+    computed: {
+        multiplesUsuarios() {
+            return this.usuariosEncontrados.length > 1;
+        }
+    }
 }
 </script>
 
