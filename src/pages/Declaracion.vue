@@ -253,7 +253,10 @@ export default {
                 },
             ],
 
-            huerfanos: []
+            huerfanos: [],
+
+            informacionCuenta: {},
+            registroUsuario: ''
         }
     },
     methods: {
@@ -296,17 +299,17 @@ export default {
         generarPDF() {
             axios.post(
                     'http://localhost:3000/api/generate-pdf', {
-                        Registro: '201404006',
-                        Nombres: 'Oscar Alejandro',
-                        Apellidos: 'Rodríguez Calderón',
+                        Registro: this.registroUsuario,
+                        Nombres: this.informacionCuenta.Nombre,
+                        Apellidos: this.informacionCuenta.Apellido,
                         Departamento: this.formulario.Departamento,
                         Municipio: this.formulario.Municipio,
                         FechaNacimiento: this.formulario.FechaNacimiento,
                         Direccion: this.formulario.Direccion.toUpperCase(),
-                        CUI: '3016860170101',
+                        CUI: String(this.informacionCuenta.CUI),
                         Telefono: this.formulario.Telefono,
                         Celular: this.formulario.Celular,
-                        CorreoElectronico: 'prueba@prueba.com',
+                        CorreoElectronico: this.informacionCuenta.Correo,
                         EstadoCivil: this.formulario.EstadoCivil,
                         Sexo: 1,
                         Puesto: this.formulario.PuestoDesempeña.toUpperCase(),
@@ -382,6 +385,8 @@ export default {
     },
     beforeMount() {},
     mounted() {
+        this.informacionCuenta = JSON.parse(localStorage.getItem("cuenta"))
+        this.registroUsuario = String(JSON.parse(localStorage.getItem("usuarioActivo")).Registro)
         // this.cargarPublicacion()
     },
     computed: {

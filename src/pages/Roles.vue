@@ -165,9 +165,30 @@ export default {
                     Descripcion: e.newData.Descripcion ? e.newData.Descripcion : e.oldData.Descripcion,
                     Id: e.oldData.IdRol
                 }).then((resp) => {
-                    resp.data.codigo == 0 ? resolve(false) : resolve(true)
+                    if (resp.data.codigo == 0) {
+                        this.$vs.dialog({
+                            type: 'alert',
+                            color: '#ed8c72',
+                            acceptText: 'Aceptar',
+                            text: resp.data.descripcion,
+                            buttonCancel: 'border',
+                            accept: () => {},
+                        })
+                        resolve(false)
+                    } else {
+                        this.$vs.dialog({
+                            type: 'alert',
+                            color: '#ed8c72',
+                            acceptText: 'Aceptar',
+                            text: resp.data.descripcion,
+                            buttonCancel: 'border',
+                            accept: () => {},
+                        })
+                        resolve(true)
+                    }
+                    // resp.data.codigo == 0 ? resolve(false) : resolve(true)
                 }).catch((err) => {
-                    console.error(err); 
+                    console.error(err);
                 })
             })
         },
@@ -180,7 +201,7 @@ export default {
                 }).then((resp) => {
                     resp.data.codigo == 0 ? resolve(false) : resolve(true)
                 }).catch((err) => {
-                    console.error(err); 
+                    console.error(err);
                 })
             })
         },
@@ -236,12 +257,11 @@ export default {
                     Eliminar: permisosEliminar
                 })
                 .then((resp) => {
-                    if(resp.data.codigo == 0)
-                    {
+                    if (resp.data.codigo == 0) {
                         this.visualizarPermisos = false
                     }
                 }).catch((err) => {
-                    console.error(err); 
+                    console.error(err);
                 })
         },
     },
@@ -266,7 +286,9 @@ export default {
 
 <style>
 .dx-item.dx-toolbar-item.dx-toolbar-label {
-    max-width: none !important; /* Elimina el max-width */
-    width: auto; /* Ajusta el ancho según el contenido */
+    max-width: none !important;
+    /* Elimina el max-width */
+    width: auto;
+    /* Ajusta el ancho según el contenido */
 }
 </style>

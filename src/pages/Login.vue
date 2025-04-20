@@ -225,10 +225,7 @@ export default {
                     CUI: this.registroUsuario.DPI,
                 })
                 .then(resp => {
-                    if (resp.data.length > 0) {
-                        
-                    }
-                    else{
+                    if (resp.data.length == 0){
                         this.$vs.dialog({
                             type: 'alert',
                             color: '#ed8c72',
@@ -285,7 +282,6 @@ export default {
                     Password: this.loginUsuario.Contraseña
                 })
                 .then(resp => {
-                    console.log(resp)
                     if (!resp.data.error && !resp.error) {
                         localStorage.setItem("authToken", resp.data.token);
                         localStorage.setItem("cuenta", JSON.stringify(resp.data.data));
@@ -318,7 +314,6 @@ export default {
                             accept: () => {},
                         });
                     } else {
-                        console.error('Error inesperado:', error);
                         this.$vs.dialog({
                             type: 'alert',
                             color: 'danger',
