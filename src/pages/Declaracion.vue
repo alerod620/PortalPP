@@ -343,7 +343,7 @@ export default {
                         // Crear un enlace temporal para descargar el archivo
                         const link = document.createElement('a');
                         link.href = url;
-                        link.setAttribute('download', 'reporte.pdf'); // Nombre del archivo
+                        link.setAttribute('download', 'DeclaracionBeneficiarios.pdf'); // Nombre del archivo
                         document.body.appendChild(link);
                         link.click();
 
