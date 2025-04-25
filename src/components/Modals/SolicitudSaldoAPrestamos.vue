@@ -37,18 +37,18 @@
         </tbody>
       </table>
 
-      <!-- Tabla de Copia DPI -->
+      <!-- Tabla de Copia DPI y Voucher de pago -->
       <table class="solicitud-table">
         <thead>
           <tr>
-            <th>Copia DPI</th>
-            <th>Documento</th>
+            <th>Tipo Archivo</th>
+            <th>Nombre</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Fecha carga: {{ solicitud.fechaCargaDPI }}</td>
+            <td>DPI </td>
             <td v-if="documentoDPI">
               <a :href="documentoDPI.url" target="_blank">{{ documentoDPI.nombreDocumento }}</a>
             </td>
@@ -57,19 +57,44 @@
               <button @click="verVistaPreviaDPI" class="btn btn-primary" :disabled="!documentoDPI">Vista Previa</button>
             </td>
           </tr>
+
+          <tr>
+            <td>Voucher de Pago </td>
+            <td>
+              <span v-if="voucerPago"> <a :href="voucerPago.url" target="_blank">{{ voucerPago.nombreDocumento }}</a></span>
+              <span v-else>No hay voucher de pago</span>
+            </td>
+            <td>
+              <button @click="verVistaPreviaVoucher" class="btn btn-primary" v-if="voucerPago">Vista Previa</button>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="2">
+              <!-- Mostrar Voucher de Pago si está disponible -->
+              <span v-if="estadoCuenta">Estado de cuenta: <a :href="solicitud.voucherDePago.url" target="_blank">{{ solicitud.voucherDePago.nombreDocumento }}</a></span>
+              <span v-else>cargar estado de cuenta</span>
+            </td>
+            <td>
+              <div class="file-upload">
+                <input type="file" @change="seleccionarArchivo" accept="application/pdf" />
+                <p v-if="mensaje" :class="{ error: error }">{{ mensaje }}</p>
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
 
+      
+      
+
       <!-- Input para seleccionar el archivo -->
-      <div class="file-upload">
-        <input type="file" @change="seleccionarArchivo" accept="application/pdf" />
-        <p v-if="mensaje" :class="{ error: error }">{{ mensaje }}</p>
-      </div>
+      
 
       <!-- Botón para subir el documento y rechazar solicitud -->
       <div class="button-group">
         <button @click="subirDocumento" :disabled="!archivo" class="btn btn-upload">
-          Subir Documento
+          Enviar a Revision
         </button>
         <button @click="rechazarSolicitud" class="btn btn-danger">
           Rechazar Solicitud
@@ -87,6 +112,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import axios from "axios";
@@ -109,10 +135,17 @@ export default {
       error: false,
       motivo: "",
       mostrarMotivo: false,
-      documentoDPI: null // Información sobre el documento DPI
+      documentoDPI: null, // Información sobre el documento DPI
+      estadoCuenta: null,
+      voucerPago: null
     };
   },
+  mounted() {
+    // Llamamos al método para obtener el documento cuando el componente se monta
+    this.obtenerDocumento();
+  },
   methods: {
+   
     cerrarModal() {
       this.$emit("cerrar-modal");
     },
@@ -123,8 +156,12 @@ export default {
         alert("No hay documento disponible para vista previa.");
       }
     },
-    validarDPI() {
-      alert("Validar Copia DPI");
+    async verVistaPreviaVoucher() {
+      if (this.voucerPago && this.voucerPago.url) {
+        window.open(this.voucerPago.url, "_blank");
+      } else {
+        alert("No hay documento disponible para vista previa.");
+      }
     },
     seleccionarArchivo(event) {
       const file = event.target.files[0];
@@ -137,6 +174,11 @@ export default {
         this.error = true;
         this.archivo = null;
       }
+    },
+    async agregarEstadoCuenta() {
+      // Aquí puedes agregar la lógica para cargar el estado de cuenta
+      console.log("Agregar Estado de Cuenta...");
+      // Redirigir a la acción para subir el archivo o realizar cualquier acción relacionada
     },
     async obtenerDocumentoDPI() {
       if (this.solicitud && this.solicitud.usuario_DPI) {
@@ -156,6 +198,31 @@ export default {
         }
       }
     },
+
+    async obtenerDocumento(){
+      if (this.solicitud ) {
+        try {  
+          console.error("entra al metodo para obtener el documento de la solicitud "+ this.solicitud.idSolicitud);
+                                          //  http://localhost:3000/api/certificaciones/getdocumento/:idsolicitud
+          const response = await axios.get(`http://localhost:3000/api/certificaciones/getdocumento/${this.solicitud.idSolicitud}`);
+          if (response.data && response.data.url) {
+            const partes = response.data.url.split('/');
+            // La última parte del array será el nombre del archivo
+            const nombreArchivo = partes[partes.length - 1];
+            this.voucerPago = {
+              url: response.data.url,
+              nombreDocumento: nombreArchivo
+            };
+          } else {
+            this.documentoDPI = null;
+          }
+        } catch (error) {
+          console.error("Error al obtener el documento DPI", error);
+          this.documentoDPI = null;
+        }
+      }
+    }
+    ,
     async subirDocumento() {
       if (!this.archivo || !this.solicitud || !this.solicitud.usuario_DPI) {
         this.mensaje = "Error: Falta el archivo o el DPI del usuario.";
@@ -211,6 +278,63 @@ export default {
         console.error(error);
       }
     },
+    
+    async subirDocumentoFirma() {
+      if (!this.archivo || !this.solicitud || !this.solicitud.usuario_DPI) {
+        this.mensaje = "Error: Falta el archivo o el DPI del usuario.";
+        this.error = true;
+        return;
+      }
+
+      // Obtener el DPI del usuario
+      const dpiUsuario = this.solicitud.usuario_DPI;
+
+      // Obtener la fecha actual en formato DDMMYYYY
+      const fechaActual = new Date();
+      const dia = String(fechaActual.getDate()).padStart(2, '0');
+      const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+      const año = fechaActual.getFullYear();
+      const fechaFormateada = `${dia}${mes}${año}`;
+
+      // Crear el nuevo nombre del archivo
+      const nuevoNombreArchivo = `${dpiUsuario}_${fechaFormateada}_estadoCuenta.pdf`;
+
+      // Crear un nuevo archivo Blob con el mismo contenido pero con el nuevo nombre
+      const archivoRenombrado = new File([this.archivo], nuevoNombreArchivo, {
+        type: this.archivo.type
+      });
+
+      // Crear FormData y adjuntar el archivo con el nuevo nombre
+      const formData = new FormData();
+      formData.append("file", archivoRenombrado);
+      formData.append("userId", 1);
+      //formData.append("userId", this.solicitud.userId);
+      formData.append("tipoDocumento", this.solicitud.tipoCertificacion);
+      formData.append("userDocument", this.solicitud.usuario_DPI);
+      formData.append("idTipoDocumento", 1);
+      formData.append("idEstadoCuenta", this.solicitud.idSolicitud);
+      formData.append("typeDocumento", "ESTADO_CUENTA");
+
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/api/certificaciones/uploadFileEstadoCuenta",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          }
+        );
+
+        this.mensaje = `Archivo subido con éxito: ${nuevoNombreArchivo}`;
+        this.error = false;
+      } catch (error) {
+        this.mensaje = "Error al subir el archivo.";
+        this.error = true;
+        console.error(error);
+      }
+    },
+
     rechazarSolicitud() {
       this.mostrarMotivo = true;
     },
@@ -256,6 +380,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .modal-overlay {

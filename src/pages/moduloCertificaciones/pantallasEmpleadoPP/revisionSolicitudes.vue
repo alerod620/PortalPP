@@ -75,6 +75,14 @@
       :isVisible="modalVisible"
       @cerrar-modal="cerrarModal"
     />
+
+    <ModalSaldoPrestamos
+      v-if="modalVisibleSP"
+      :solicitud="solicitudSeleccionada"
+      :isVisible="modalVisibleSP"
+      @cerrar-modal="cerrarModal"
+    />
+
   </div>
 </template>
 
@@ -82,6 +90,7 @@
 import axios from 'axios';
 import { DxDataGrid, DxColumn, DxSelection, DxEditing } from 'devextreme-vue/data-grid';
 import ModalVistaPrevia from '../../../components/Modals/SolicitudEstadoDeCuentaModal.vue';
+import ModalSaldoPrestamos from '../../../components/Modals/SolicitudSaldoAPrestamos.vue';
 
 export default {
   components: {
@@ -90,11 +99,13 @@ export default {
     DxSelection,
     DxEditing,
     ModalVistaPrevia,
+    ModalSaldoPrestamos,
   },
   data() {
     return {
       solicitudes: [],
       modalVisible: false,
+      modalVisibleSP: false,
       solicitudSeleccionada: null,
       DefaultDxGridConfiguration: {
         showBorders: true,
@@ -131,12 +142,19 @@ export default {
     // Método para ver una solicitud (acción del botón en la columna)
     verSolicitud(solicitud) {
       this.solicitudSeleccionada = solicitud;
-      this.modalVisible = true;
+      console.log(solicitud)
+      if(solicitud.tipoCertificacion == "Estado de Cuenta"){
+        this.modalVisible = true;
+      }else{
+        this.modalVisibleSP = true;
+      }
+      
     },
 
     // Acción para cerrar el modal
     cerrarModal() {
       this.modalVisible = false;
+      this.modalVisibleSP = false;
     },
   },
   mounted() {

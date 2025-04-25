@@ -3,12 +3,9 @@
     <h1>Seguimiento de Certificación</h1>
 
     <div class="form-group">
-      <label for="certificacion">Seleccione la certificación</label>
-      <select v-model="certificacion" @change="handleCertificacionChange" id="certificacion" class="form-control">
-        <option value="00301">00301 - Certificación Cuotas</option>
-        <option value="00302">00302 - Otra Certificación</option>
-        <option value="estadoCuenta">Estado de Cuenta</option>
-      </select>
+      <label for="certificacion">Certificación:</label>
+      <br>
+      <label class="labelCertificacion" for="certificacion">{{ certificacionLabel }}</label>
     </div>
 
     <div class="form-row">
@@ -16,36 +13,11 @@
         <label for="fechaAplicacion">Fecha Aplicación</label>
         <input type="date" id="fechaAplicacion" v-model="fechaAplicacion" class="form-control" />
       </div>
-      <div class="form-group">
-        <label for="codigoSolicitud">Código Solicitud</label>
-        <input type="text" id="codigoSolicitud" v-model="codigoSolicitud" class="form-control" />
-      </div>
     </div>
 
     <!-- Barra de progreso horizontal -->
-    
     <div class="progress-container">
-      <!-- Mostrar el último paso solo si NO es Estado de Cuenta -->
       <template v-if="!esEstadoDeCuenta">
-        
-      <div class="step" :class="{ active: currentStep >= 1 }">
-        <span class="step-label">Solicitud creada <br /> {{ fechas[0] }}</span>
-      </div>
-      <div class="progress-bar"></div>
-      <div class="step" :class="{ active: currentStep >= 2 }">
-        <span class="step-label">Revisada por Plan de Prestaciones <br /> {{ fechas[1] }}</span>
-      </div>
-      <div class="progress-bar"></div>
-      <div class="step" :class="{ active: currentStep >= 3 }">
-        <span class="step-label">Firma Jefe de Área <br /> {{ fechas[2] }}</span>
-      </div>
-        <div class="progress-bar"></div>
-        <div class="step" :class="{ active: currentStep >= 4 }">
-          <span class="step-label">Certificación Generada</span>
-        </div>
-      </template>
-      <template v-if="esEstadoDeCuenta === 1">
-        
         <div class="step" :class="{ active: currentStep >= 1 }">
           <span class="step-label">Solicitud creada <br /> {{ fechas[0] }}</span>
         </div>
@@ -57,11 +29,25 @@
         <div class="step" :class="{ active: currentStep >= 3 }">
           <span class="step-label">Firma Jefe de Área <br /> {{ fechas[2] }}</span>
         </div>
-          <div class="progress-bar"></div>
-          <div class="step" :class="{ active: currentStep >= 4 }">
-            <span class="step-label">Certificación Generada</span>
-          </div>
-        </template>
+        <div class="progress-bar"></div>
+        <div class="step" :class="{ active: currentStep >= 4 }">
+          <span class="step-label">Certificación Generada</span>
+        </div>
+      </template>
+
+      <template v-if="esEstadoDeCuenta">
+        <div class="step" :class="{ active: currentStep >= 1 }">
+          <span class="step-label">Solicitud creada <br /> {{ fechas[0] }}</span>
+        </div>
+        <div class="progress-bar"></div>
+        <div class="step" :class="{ active: currentStep >= 2 }">
+          <span class="step-label">Revisada por Plan de Prestaciones <br /> {{ fechas[1] }}</span>
+        </div>
+        <div class="progress-bar"></div>
+        <div class="step" :class="{ active: currentStep >= 3 }">
+          <span class="step-label">Certificación Generada</span>
+        </div>
+      </template>
     </div>
 
     <!-- Barra de progreso general -->
@@ -77,48 +63,71 @@ export default {
     return {
       certificacion: '00301',
       fechaAplicacion: '2024-05-02',
-      codigoSolicitud: 'CC-010210',
-      currentStep: 3,
+      codigoSolicitud: this.$route.query.codigoSolicitud || '',  // Extraer el código de solicitud desde la URL
+      currentStep: 1,  // Inicializar en el primer paso
       totalSteps: 4,
-      fechas: ['02 Mayo 2024', '02 Mayo 2024', '---'],
+      fechas: ['02 Mayo 2024', '02 Mayo 2024', '---', '---'],  // Fechas predeterminadas, puedes modificarlas más tarde
+      certificacionLabel: '',
+      esEstadoDeCuenta: false, // Inicializa como falso
       Solicitud: null,
     };
   },
   created() {
     this.Solicitud = this.$route.query.Solicitud;
+    
+    if (this.Solicitud == null) {
+      alert('No se ha cargado ninguna solicitud.');
+    } else {
+      this.certificacionLabel = this.Solicitud.idSolicitud + " - " + this.Solicitud.tipoCertificacion;
+
+      if (this.Solicitud.tipoCertificacion === "Estado de Cuenta") {
+        this.esEstadoDeCuenta = true;
+        this.totalSteps = 3;
+        if (this.Solicitud.estado === "CREADA") {
+          this.currentStep = 1;
+        } else if (this.Solicitud.estado === "REVISADA") {
+          this.currentStep = 2;
+        } else {
+          this.currentStep = 3;
+        }
+
+        // Modificando las fechas usando Vue.set para asegurar que se detecten los cambios
+        this.$set(this.fechas, 0, formatDate(this.Solicitud.fechaCreacion));
+        this.$set(this.fechas, 1, '02 abril 2025');
+        this.$set(this.fechas, 2, '---');
+        this.$set(this.fechas, 3, '---');
+      } else if (this.Solicitud.tipoCertificacion === "Saldo Prestamos") {
+        this.esEstadoDeCuenta = false;
+        this.totalSteps = 4;
+      }
+    }
   },
   computed: {
-    // Determina si la certificación seleccionada es "Estado de Cuenta"
     esEstadoDeCuenta() {
-      var respuesta = 0;
-      if(this.certificacion === 'estadoCuenta'){
-        respuesta = 1;
-      }else if (this.certificacion === 'saldoAPrestamo'){
-        respuesta = 2;
-      }
       return this.certificacion === 'estadoCuenta';
     },
-    // Calcula el porcentaje de progreso
     progressPercentage() {
-      let total = this.esEstadoDeCuenta ? 3 : 4;
-      return (this.currentStep / total) * 100;
+      // Calcula el progreso en porcentaje
+      return (this.currentStep / this.totalSteps) * 100;
     }
   },
   methods: {
-    handleCertificacionChange() {
-      if (this.certificacion === 'estadoCuenta') {
-        this.currentStep = 3;
-        this.fechas = ['02 Mayo 2024', '02 Mayo 2024', '---'];
-      } else {
-        this.currentStep = 3;
-        this.fechas = ['02 Mayo 2024', '02 Mayo 2024', '---'];
-      }
+     formatDate(dateString) {
+      const date = new Date(dateString);  // Convierte la fecha a un objeto Date
+      const day = String(date.getDate()).padStart(2, '0');  // Obtiene el día y asegura que sea de dos dígitos
+      const month = String(date.getMonth() + 1).padStart(2, '0');  // Obtiene el mes (se suma 1 porque los meses son de 0-11)
+      const year = date.getFullYear();  // Obtiene el año
+      const hours = String(date.getHours()).padStart(2, '0');  // Obtiene la hora
+      const minutes = String(date.getMinutes()).padStart(2, '0');  // Obtiene los minutos
+
+      return `${day}/${month}/${year} ${hours}:${minutes}`;  // Formatea la fecha en el formato deseado
     }
-  }
+  },
 };
 </script>
 
 <style scoped>
+/* Estilos para el componente */
 .container {
   max-width: 800px;
   margin: 0 auto;
@@ -221,4 +230,17 @@ h1 {
   height: 100%;
   transition: width 0.3s ease;
 }
+
+.labelCertificacion {
+  text-align: center; /* Centra el título */
+  margin: 30px 0; /* Espaciado superior e inferior */
+  font-family: 'Arial', sans-serif; /* Fuente de título */
+  font-size: 20px; /* Tamaño del título */
+  font-weight: bold; /* Estilo en negrita */
+  color: #000000; /* Color del título */
+  text-transform: uppercase; /* Convertir a mayúsculas */
+  letter-spacing: 2px; /* Espaciado entre letras */
+  margin-bottom: 20px; /* Espacio debajo del título */
+}
+
 </style>
