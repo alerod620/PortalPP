@@ -28,6 +28,7 @@ import Declaracion from "@/pages/Declaracion.vue";
 import InicioAfiliado from "@/pages/InicioAfiliado.vue";
 import Landing from "@/pages/Landingpage.vue";
 import Pagos from "@/pages/Pagos.vue";
+import Descuentos from "@/pages/Descuentos.vue";
 
 const routes = [
   {
@@ -135,6 +136,11 @@ const routes = [
         path: "pagos",
         name: "pagos",
         component: Pagos,
+      },
+      {
+        path: "descuentos",
+        name: "descuentos",
+        component: Descuentos,
       },
     ],
     // meta: { requiresAuth: true },

@@ -85,6 +85,14 @@ export function validarDPI(e) {
   return modulo === verificador;
 }
 
+export function textoDinero(cellInfo) {
+  if (cellInfo.value !== null) {
+      let x = parseFloat(cellInfo.value).toFixed(2)
+      return 'Q. ' + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  return null
+}
+
 export const Departamentos = [
   {
     "title": "Alta Verapaz",
