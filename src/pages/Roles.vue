@@ -2,7 +2,7 @@
 <div>
     <card title="Roles">
         <div class="row p-2" style="display: grid; place-items: center;" width="100%">
-            <DxDataGrid :ref="tablaRoles" v-bind="DefaultDxGridConfiguration" :data-source="roles" :filter-sync-enabled="true" :headerFilter="{ visible: true, allowSearch: true }" :searchPanel="{ visible: true }" :height="'100%'" :width="'100%'" :on-row-inserting="crearRol" :on-row-inserted="cargarRol" :on-row-updating="editarRol" :on-row-updated="cargarRol" :on-row-removing="eliminarRol" :on-row-removed="cargarRol">
+            <DxDataGrid :ref="tablaRoles" v-bind="DefaultDxGridConfiguration" :data-source="roles" :filter-sync-enabled="true" :headerFilter="{ visible: true, allowSearch: true }" :searchPanel="{ visible: true }" :height="'100%'" :width="'100%'" :on-row-inserting="crearRol" :on-row-inserted="cargarRol" :on-row-updating="editarRol" :on-row-updated="cargarRol" :on-row-removing="eliminarRol" :on-row-removed="cargarRol" :on-cell-prepared="onCellPrepared">
                 <DxSelection mode="single" />
 
                 <DxEditing :allow-updating="true" :allow-adding="true" :allow-deleting="true" mode="popup" :use-icons="true" :confirmDelete="true">
@@ -29,7 +29,7 @@
                 </DxColumn>
                 <DxColumn width="auto" data-field="IdRol" caption="Id" data-type="string" alignment="center" :form-item="{ visible: false }" />
                 <DxColumn width="auto" data-field="NombreRol" caption="Nombre" data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="Descripcion" caption="Descripción" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="Descripcion" caption="Descripción" data-type="string" alignment="left" />
             </DxDataGrid>
         </div>
     </card>
@@ -124,6 +124,11 @@ export default {
         }
     },
     methods: {
+        onCellPrepared(e) {
+            if (e.rowType == "header" && e.column.dataField === "Descripcion") {
+                e.cellElement.style.textAlign = 'center';
+            }
+        },
         cargarRol() {
             axios.post('http://localhost:3000/api/Roles', {
                     Opcion: 1

@@ -1,14 +1,14 @@
 <template>
 <div class="buttons">
     <div class="p-2 w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4 div-button" v-for="(item, index) in usuarios" v-bind:key="index">
-        <vs-button class="button" color="dark" type="border" @click.native="seleccionarUsuario(item)">
+        <vs-button class="button" :disabled="item.Informacion.idpersona == usuarioActivo.Informacion.idpersona ? true : false" :color="item.Informacion.idpersona == usuarioActivo.Informacion.idpersona ? 'success' : 'dark'" :type="item.Informacion.idpersona == usuarioActivo.Informacion.idpersona ? 'filled' : 'border'" @click.native="seleccionarUsuario(item)">
             <div>
-                <font-awesome-icon :icon="['fas', 'child']" class="i-size" v-if="item.TipoUsuario.Nombre == 'Huerfano'" />
-                <font-awesome-icon :icon="['fas', 'user-clock']" class="i-size" v-if="item.TipoUsuario.Nombre == 'Jubilado'" />
-                <font-awesome-icon :icon="['fas', 'heart-crack']" class="i-size" v-if="item.TipoUsuario.Nombre == 'Viudo'" />
-                <font-awesome-icon :icon="['fas', 'user-tie']" class="i-size" v-if="item.TipoUsuario.Nombre == 'Administrador'" />
+                <font-awesome-icon :icon="['fas', 'child']" class="i-size" v-if="item.Nombre == 'Huerfano'" />
+                <font-awesome-icon :icon="['fas', 'user-clock']" class="i-size" v-if="item.Nombre == 'Jubilado'" />
+                <font-awesome-icon :icon="['fas', 'heart-crack']" class="i-size" v-if="item.Nombre == 'Viudo'" />
+                <font-awesome-icon :icon="['fas', 'user-tie']" class="i-size" v-if="item.Nombre == 'Administrador'" />
             </div>
-            <span>{{item.TipoUsuario.Nombre}}</span>
+            <span>{{item.Nombre}}</span>
         </vs-button>
     </div>
 </div>
@@ -17,7 +17,8 @@
 <script>
 export default {
     props: {
-        usuarios: null
+        usuarios: null,
+        usuarioActivo: null
     },
     data() {
         return {}

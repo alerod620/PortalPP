@@ -285,7 +285,7 @@ export default {
                     if (!resp.data.error && !resp.error) {
                         localStorage.setItem("authToken", resp.data.token);
                         localStorage.setItem("cuenta", JSON.stringify(resp.data.data));
-                        localStorage.setItem("usuarioActivo", JSON.stringify(resp.data.data.Usuarios[0]));
+                        localStorage.setItem("usuarioActivo", JSON.stringify(resp.data.data.Roles[0]));
 
                         const redirectPath = this.$route.query.redirect || "/dashboard/inicio";
                         this.$router.push(redirectPath);

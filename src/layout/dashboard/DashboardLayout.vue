@@ -92,8 +92,8 @@ export default {
             let infoUsuario = localStorage.getItem("usuarioActivo")
             if (infoUsuario) {
                 infoUsuario = JSON.parse(infoUsuario)
-                this.modulosDisponibles = infoUsuario.Roles[0].Modulos
-                this.permisosDisponibles = infoUsuario.Roles[0].Permisos
+                this.modulosDisponibles = infoUsuario.Modulos
+                this.permisosDisponibles = infoUsuario.Permisos
             } else {
                 this.modulosDisponibles = []
                 this.permisosDisponibles = []

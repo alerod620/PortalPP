@@ -123,7 +123,6 @@ export default {
         guardarPaginaActual(e) {
             if (e.fullName === 'paging.pageIndex') {
                 this.paginaActual = e.value
-                console.log('Página actual:', this.paginaActual)
             }
         },
         async cargarLibros() {

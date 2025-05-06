@@ -56,7 +56,7 @@
         </form>
     </DxPopup>
     <DxPopup :show-title="true" height="auto" :visible.sync="popupUsuarios" title="Cambiar de usuario" :show-close-button="true">
-        <SeleccionarUsuario :usuarios="usuarios" @usuarioSeleccinado="cargarInfoCuenta" />
+        <SeleccionarUsuario :usuarios="usuarios" :usuarioActivo="infoUsuario" @usuarioSeleccinado="cargarInfoCuenta" />
     </DxPopup>
 </nav>
 </template>
@@ -110,6 +110,7 @@ export default {
             infoTemporal: {}, //Variable para guardar la información de la cuenta, antes de editar
 
             usuarios: [],
+            infoUsuario: null,
 
             editarButton: {
                 text: 'Editar',
@@ -166,14 +167,12 @@ export default {
         cargarInfoCuenta() {
             this.popupUsuarios = false
             let infoCuenta = JSON.parse(localStorage.getItem("cuenta"))
-            let infoUsuario = JSON.parse(localStorage.getItem("usuarioActivo"))
+            this.infoUsuario = JSON.parse(localStorage.getItem("usuarioActivo"))
             if (infoCuenta) {
-                this.usuarios = infoCuenta.Usuarios
+                this.usuarios = infoCuenta.Roles
                 this.infoPerfil = {
                     ...infoCuenta,
-                    Plaza: infoUsuario.Plaza,
-                    Registro: infoUsuario.Registro,
-                    Partida: infoUsuario.Partida
+                    ...this.infoUsuario.Informacion
                 }
             } else {
                 this.infoPerfil = {}
@@ -198,7 +197,6 @@ export default {
 
         async handleSubmitEditar(e) {
             e.preventDefault()
-            console.log('Guardar')
 
             await axios.post('http://localhost:3000/api/Cuentas', {
                     Opcion: 6,
@@ -208,7 +206,6 @@ export default {
                     Telefono: this.infoPerfil.Telefono
                 })
                 .then(resp => {
-                    console.log(resp)
                     if (resp.data.codigo == 0) {
                         this.editarPerfil = false
                         this.$vs.dialog({

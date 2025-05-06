@@ -76,7 +76,6 @@
                         busqueda: "ppr"
                     })
                     .then(resp => {
-                        console.log(resp)
                         if (resp.data.data.listado_descuentos.length > 0) {
                             this.descuentos = resp.data.data.listado_descuentos.filter(x => parseFloat(x.monto) > 0)
                         }
@@ -92,7 +91,6 @@
                         responseType: 'arraybuffer',
                     })
                     .then(resp => {
-                        console.log(resp)
                         if (resp.status === 200) {
                             const blob = new Blob([resp.data], {
                                 type: 'application/pdf'

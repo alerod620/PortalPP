@@ -2,7 +2,7 @@
 <div>
     <card title="Módulos">
         <div class="row p-2" style="display: grid; place-items: center;" width="100%">
-            <DxDataGrid v-bind="DefaultDxGridConfiguration" :data-source="modulos" :paging="{enabled: true}" :filter-sync-enabled="true" :searchPanel="{ visible: true }" :height="'100%'" :width="'100%'" :on-row-inserting="crearModulo" :on-row-inserted="cargarModulos" :on-row-updating="editarModulo" :on-row-updated="cargarModulos" :on-row-removing="eliminarModulo" :on-row-removed="cargarModulos" @init-new-row="onInitNuevoRegistro" @editing-start="onEditarRegistro">
+            <DxDataGrid v-bind="DefaultDxGridConfiguration" :data-source="modulos" :paging="{enabled: true}" :filter-sync-enabled="true" :searchPanel="{ visible: true }" :height="'100%'" :width="'100%'" :on-row-inserting="crearModulo" :on-row-inserted="cargarModulos" :on-row-updating="editarModulo" :on-row-updated="cargarModulos" :on-row-removing="eliminarModulo" :on-row-removed="cargarModulos" @init-new-row="onInitNuevoRegistro" @editing-start="onEditarRegistro" :on-cell-prepared="onCellPrepared">
                 <DxSelection mode="single" />
 
                 <DxEditing :allow-updating="true" :allow-adding="true" :allow-deleting="true" mode="popup" :use-icons="true" :confirmDelete="true">
@@ -28,11 +28,11 @@
                     <DxButton name="edit" />
                 </DxColumn>
                 <DxColumn width="70px" data-field="IdModulo" caption="Id" data-type="string" alignment="center" :form-item="{ visible: false }" />
-                <DxColumn width="10%" data-field="Nombre" data-type="string" alignment="center" />
-                <DxColumn width="20%" data-field="Ruta" data-type="string" alignment="center" />
+                <DxColumn width="120px" data-field="Nombre" data-type="string" alignment="center" />
+                <DxColumn width="100px" data-field="Ruta" data-type="string" alignment="center" />
                 <DxColumn width="100px" data-field="Icono" data-type="string" alignment="center" />
                 <DxColumn width="100px" data-field="EstadoDescripcion" caption="Estado" data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="Descripcion" caption="Descripción" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="Descripcion" caption="Descripción" data-type="string" alignment="left" />
             </DxDataGrid>
         </div>
     </card>
@@ -101,6 +101,11 @@ export default {
         }
     },
     methods: {
+        onCellPrepared(e) {
+            if (e.rowType == "header" && e.column.dataField === "Descripcion") {
+                e.cellElement.style.textAlign = 'center';
+            }
+        },
         cargarModulos() {
             axios.post('http://localhost:3000/api/Modulos', {
                     Opcion: 1
