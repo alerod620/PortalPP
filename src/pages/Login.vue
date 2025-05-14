@@ -39,12 +39,11 @@
                                 <DxGroupItem item-type="group">
                                     <DxItem data-field="Nombre" editor-type="dxTextBox" :validationRules="[{ type: 'required' }]" />
                                     <DxItem data-field="Apellido" editor-type="dxTextBox" :validationRules="[{ type: 'required' }]" />
-                                    <DxItem data-field="Registro" editor-type="dxTextBox" :editor-options="{ inputMode: 'numeric', minLength: 1 }" :validationRules="[{ type: 'required' }, { type: 'pattern', pattern: '^[0-9]+$', message: 'El registro debe ser numérico.' }]" />
                                     <DxItem data-field="Correo" editor-type="dxTextBox" :validationRules="[{ type: 'required' }, { type: 'email', message: 'Correo no válido.' }]" />
                                     <DxItem data-field="Telefono" editor-type="dxTextBox" :editor-options="{ mask: '0000 0000', maskChar: '_', inputMode: 'numeric', maxLength: 8, minLength: 8 }" :validationRules="[{ type: 'required' }, { type: 'custom', validationCallback: validarTelefonoCelular, message: 'El número de celular debe iniciar con 3, 4 o 5 y tener 8 dígitos' }]">
                                         <DxLabel text="Celular" />
                                     </DxItem>
-                                    <DxItem data-field="DPI" editor-type="dxTextBox" :editor-options="{ mask: '0000 00000 0000', maskChar: '_', inputMode: 'numeric' }" :validationRules="[{ type: 'required', message: 'El CUI es obligatorio.' }, { type: 'custom', validationCallback: validarDPI, message: 'El DPI no es válido.' }]" />
+                                    <DxItem data-field="CUI" editor-type="dxTextBox" :editor-options="{ mask: '0000 00000 0000', maskChar: '_', inputMode: 'numeric' }" :validationRules="[{ type: 'required', message: 'El CUI es obligatorio.' }, { type: 'custom', validationCallback: validarDPI, message: 'El CUI no es válido.' }]" />
                                     <!-- <DxItem data-field="Contraseña" editor-type="dxTextBox" :editor-options="{ mode:'password' }" /> -->
                                 </DxGroupItem>
 
@@ -86,7 +85,7 @@
                 <div class="mt-4" style="display:grid; align-items: center; justify-content:center;">
                     <DxForm :form-data.sync="recuperarCuenta" labelMode="outside" labelLocation="top">
                         <DxGroupItem item-type="group">
-                            <DxItem data-field="CUI" editor-type="dxTextBox" :editor-options="{ mask: '0000 00000 0000', maskChar: '_', inputMode: 'numeric' }" :validationRules="[{ type: 'required', message: 'El CUI es obligatorio.' }, { type: 'custom', validationCallback: validarDPI, message: 'El DPI no es válido.' }]" />
+                            <DxItem data-field="CUI" editor-type="dxTextBox" :editor-options="{ mask: '0000 00000 0000', maskChar: '_', inputMode: 'numeric' }" :validationRules="[{ type: 'required', message: 'El CUI es obligatorio.' }, { type: 'custom', validationCallback: validarDPI, message: 'El CUI no es válido.' }]" />
                             
                             <DxButtonItem :button-options="restablecerButtonOptions" horizontal-alignment="center" verical-alignment="center" />
                         </DxGroupItem>
@@ -197,7 +196,7 @@ export default {
         {
             await axios.post('http://localhost:3000/api/Cuentas', {
                     Opcion: 5,
-                    CUI: this.registroUsuario.DPI,
+                    CUI: this.registroUsuario.CUI,
                 })
                 .then(resp => {
                     if (resp.data.length > 0) {
@@ -206,7 +205,7 @@ export default {
                             color: '#ed8c72',
                             title: 'Cuenta existente',
                             acceptText: 'Aceptar',
-                            text: 'Ya existe una cuenta existente con el CUI/DPI ingresado',
+                            text: 'Ya existe una cuenta existente con el CUI ingresado',
                             buttonCancel: 'border',
                             accept: () => {},
                         })
@@ -222,7 +221,7 @@ export default {
         {
             await axios.post('http://localhost:3000/api/Cuentas', {
                     Opcion: 5,
-                    CUI: this.registroUsuario.DPI,
+                    CUI: this.registroUsuario.CUI,
                 })
                 .then(resp => {
                     if (resp.data.length == 0){
@@ -231,7 +230,7 @@ export default {
                             color: '#ed8c72',
                             title: 'Cuenta no encontrada',
                             acceptText: 'Aceptar',
-                            text: 'No existe una cuenta existente con el CUI/DPI ingresado',
+                            text: 'No existe una cuenta existente con el CUI ingresado',
                             buttonCancel: 'border',
                             accept: () => {},
                         })
@@ -246,8 +245,7 @@ export default {
                     Apellido: this.registroUsuario.Apellido,
                     Correo: this.registroUsuario.Correo,
                     Telefono: this.registroUsuario.Telefono,
-                    DPI: this.registroUsuario.DPI,
-                    Registro: this.registroUsuario.Registro
+                    CUI: this.registroUsuario.CUI,
                 })
                 .then(resp => {
                     if (resp.data.length > 0) {
@@ -271,8 +269,7 @@ export default {
             this.registroUsuario.Apellido = null
             this.registroUsuario.Correo = null
             this.registroUsuario.Telefono = null
-            this.registroUsuario.DPI = null
-            this.registroUsuario.Registro = null
+            this.registroUsuario.CUI = null
         },
 
         login()

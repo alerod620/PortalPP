@@ -27,7 +27,6 @@
                 <DxColumn width="auto" data-field="Nombre" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="Apellido" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="TipoUsuario" data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="Registro" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="DPI" data-type="string" alignment="center" />
             </DxDataGrid>
         </div>
@@ -41,7 +40,6 @@
                         <DxItem data-field="Nombre" editor-type="dxTextBox" />
                         <DxItem data-field="Apellido" editor-type="dxTextBox" />
                         <DxItem data-field="DPI" editor-type="dxTextBox" />
-                        <DxItem data-field="Registro" editor-type="dxTextBox" />
                         <!-- <DxItem data-field="TipoUsuario" editor-type="dxTextBox" /> -->
                     </DxItem>
                     <DxItem caption="Información usuario" item-type="group" :col-count="2">
@@ -57,9 +55,6 @@
                         </DxItem>
                         <DxItem data-field="DPIUsuario" editor-type="dxTextBox">
                             <DxLabel text="DPI" />
-                        </DxItem>
-                        <DxItem data-field="RegistroUsuario" editor-type="dxTextBox">
-                            <DxLabel text="Registro" />
                         </DxItem>
                         <!-- <DxItem data-field="TipoUsuario" editor-type="dxTextBox" /> -->
                     </DxItem>
@@ -170,15 +165,13 @@ export default {
             solicitudActiva: {
                 Nombre: null,
                 Apellido: null,
-                DPI: null,
-                Registro: null,
+                CUI: null,
                 Telefono: null,
                 Correo: null,
                 IdSolicitudCuenta: null,
                 NombreUsuario: null,
                 ApellidoUsuario: null,
                 DPIUsuario: null,
-                RegistroUsuario: null,
                 IdUsuario: null,
                 TipoUsuario: null
             },
@@ -204,7 +197,6 @@ export default {
                 Nombre: null,
                 Apellido: null,
                 DPI: null,
-                Registro: null
             },
 
             rechazado: false, //Variable para saber cuando se rechazará una solicitud
@@ -292,7 +284,7 @@ export default {
             this.buscarUsuario()
         },
 
-        buscarUsuario() { // Realiza la búsqueda del usuario por medio del registro de la solicitud seleccionada
+        buscarUsuario() { // Realiza la búsqueda del usuario por medio del CUI de la solicitud seleccionada
             axios({
                     method: 'post',
                     url: 'http://localhost:3000/api/Usuarios',

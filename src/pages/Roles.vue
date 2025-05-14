@@ -134,6 +134,7 @@ export default {
                     Opcion: 1
                 })
                 .then(resp => {
+                    console.log(resp.data)
                     if (resp.data.length > 0) {
                         this.roles = resp.data
                     }
@@ -155,10 +156,28 @@ export default {
                     Nombre: e.data.NombreRol,
                     Descripcion: e.data.Descripcion,
                 })
-                .then(resp => {
-                    if (resp.data.length > 0) {
-                        this.modulos = resp.data
-                    }
+                .then((resp) => {
+                    const respuesta = resp.data;
+                    console.log(respuesta)
+                    this.$vs.dialog({
+                        type: 'alert',
+                        color: respuesta.codigo === 0 ? '#009e32' : '#ff0055', // verde o rojo
+                        title: respuesta.codigo === 0 ? 'Éxito' : 'Error',
+                        acceptText: 'Aceptar',
+                        text: respuesta.mensaje,
+                        accept: () => {
+                        }
+                    });
+                    this.cargarRol()
+                }).catch((err) => {
+                    this.$vs.dialog({
+                        type: 'alert',
+                        color: '#ff0055',
+                        title: 'Error del servidor',
+                        acceptText: 'Aceptar',
+                        text: 'Ocurrió un error al intentar eliminar el rol.',
+                        accept: () => {}
+                    });
                 })
         },
 
@@ -173,9 +192,10 @@ export default {
                     if (resp.data.codigo == 0) {
                         this.$vs.dialog({
                             type: 'alert',
-                            color: '#ed8c72',
+                            color: '#009e32',
+                            title: 'Rol actualizado',
                             acceptText: 'Aceptar',
-                            text: resp.data.descripcion,
+                            text: resp.data.mensaje,
                             buttonCancel: 'border',
                             accept: () => {},
                         })
@@ -183,9 +203,10 @@ export default {
                     } else {
                         this.$vs.dialog({
                             type: 'alert',
-                            color: '#ed8c72',
+                            color: '#ff0055',
+                            title: 'Error',
                             acceptText: 'Aceptar',
-                            text: resp.data.descripcion,
+                            text: resp.data.mensaje,
                             buttonCancel: 'border',
                             accept: () => {},
                         })
@@ -204,9 +225,29 @@ export default {
                     Opcion: 4,
                     Id: e.data.IdRol
                 }).then((resp) => {
-                    resp.data.codigo == 0 ? resolve(false) : resolve(true)
+                    const respuesta = resp.data;
+                    this.$vs.dialog({
+                        type: 'alert',
+                        color: respuesta.codigo === 0 ? '#009e32' : '#ff0055', // verde o rojo
+                        title: respuesta.codigo === 0 ? 'Éxito' : 'Error',
+                        acceptText: 'Aceptar',
+                        text: respuesta.mensaje,
+                        accept: () => {}
+                    });
+                    this.cargarRol()
+
+                    // Si el código es 0, no se cancela la eliminación
+                    resolve(respuesta.codigo === 0);
                 }).catch((err) => {
-                    console.error(err);
+                    this.$vs.dialog({
+                        type: 'alert',
+                        color: '#ff0055',
+                        title: 'Error del servidor',
+                        acceptText: 'Aceptar',
+                        text: 'Ocurrió un error al intentar eliminar el rol.',
+                        accept: () => {}
+                    });
+                    resolve(false);
                 })
             })
         },
@@ -249,22 +290,30 @@ export default {
                 })
         },
 
-        actualizarPermisos(e) {
+        async actualizarPermisos(e) {
             let nuevosPermisos = this.listadoPermisos.option('selectedItems').map(permiso => permiso.id)
 
             let permisosAgregar = nuevosPermisos.filter(permiso => !this.permisosIniciales.includes(permiso));
             let permisosEliminar = this.permisosIniciales.filter(permiso => !nuevosPermisos.includes(permiso));
 
-            axios.post('http://localhost:3000/api/Permisos_Rol', {
+            await axios.post('http://localhost:3000/api/Permisos_Rol', {
                     Actualizar: true,
                     Rol: this.IdRolEditar,
                     Agregar: permisosAgregar,
                     Eliminar: permisosEliminar
                 })
                 .then((resp) => {
-                    if (resp.data.codigo == 0) {
-                        this.visualizarPermisos = false
-                    }
+                    const respuesta = resp.data;
+                    this.$vs.dialog({
+                        type: 'alert',
+                        color: respuesta.codigo === 0 ? '#009e32' : '#ff0055', // verde o rojo
+                        title: respuesta.codigo === 0 ? 'Éxito' : 'Error',
+                        acceptText: 'Aceptar',
+                        text: respuesta.mensaje,
+                        accept: () => {}
+                    });
+
+                    this.visualizarPermisos = false
                 }).catch((err) => {
                     console.error(err);
                 })

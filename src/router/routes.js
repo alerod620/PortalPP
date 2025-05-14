@@ -1,6 +1,7 @@
 import DashboardLayout from "@/layout/dashboard/DashboardLayout.vue";
 // GeneralViews
 import NotFound from "@/pages/NotFoundPage.vue";
+import NoAutorizado from "@/pages/NoAutorizado.vue";
 
 // Admin pages
 import Dashboard from "@/pages/Dashboard.vue";
@@ -66,6 +67,7 @@ const routes = [
   {
     path: "/dashboard",
     component: DashboardLayout,
+    meta: { requiresAuth: true }, // Requiere autenticación
     children: [
       {
         path: "inicio",
@@ -76,31 +78,37 @@ const routes = [
         path: "usuarios",
         name: "usuarios",
         component: Usuarios,
+        meta: { requiresPermission: 'VerUsuarios' }
       },
       {
         path: "solicitudes",
         name: "solicitudes",
         component: Solicitudes,
+        meta: { requiresPermission: 'VerSolicitudes' }
       },
       {
         path: "modulos",
         name: "modulos",
         component: Modulos,
+        meta: { requiresPermission: 'VerModulos' }
       },
       {
         path: "permisos",
         name: "permisos",
         component: Permisos,
+        meta: { requiresPermission: 'VerPermisos' }
       },
       {
         path: "roles",
         name: "roles",
         component: Roles,
+        meta: { requiresPermission: 'VerRoles' }
       },
       {
         path: "menu",
         name: "menu",
         component: Menu,
+        meta: { requiresPermission: 'VerMenu' }
       },
       {
         path: "publicaciones",
@@ -111,16 +119,19 @@ const routes = [
         path: "publicacion",
         name: "publicacion",
         component: Publicacion,
+        meta: { requiresPermission: 'VerPublicaciones' }
       },
       {
         path: "recibos",
         name: "recibos",
         component: Recibos,
+        meta: { requiresPermission: 'ver_recibos' }
       },
       {
         path: "declaracionbeneficiarios",
         name: "declaracionbeneficiarios",
         component: Declaracion,
+        meta: { requiresPermission: 'VerBeneficiarios' }
       },
       {
         path: "inicio",
@@ -128,36 +139,50 @@ const routes = [
         component: Inicio,
       },
       {
-        path: "landing",
-        name: "landing",
-        component: Landing,
-      },
-      {
         path: "pagos",
         name: "pagos",
         component: Pagos,
+        meta: { requiresPermission: 'VerPagos' }
       },
       {
         path: "descuentos",
         name: "descuentos",
         component: Descuentos,
+        meta: { requiresPermission: 'VerDescuentos' }
       },
     ],
-    // meta: { requiresAuth: true },
   },
-  { path: "*", component: NotFound },
+  { 
+    path: "/no-autorizado",
+    name: "NoAutorizado",
+    component: NoAutorizado,
+    meta: { public: true }
+  },
 ];
 
-/**
- * Asynchronously load view (Webpack Lazy loading compatible)
- * The specified component must be inside the Views folder
- * @param  {string} name  the filename (basename) of the view to load.
-function view(name) {
-   var res= require('../components/Dashboard/Views/' + name + '.vue');
-   return res;
-};**/
+// Función para verificar si el usuario tiene un permiso específico
+export const tienePermiso = (permisoRequerido) => {
+  try {
+    const usuario = JSON.parse(localStorage.getItem('usuarioActivo') || '{}');
+    
+    // Si no hay usuario o no tiene permisos, devolver falso
+    if (!usuario || !usuario.Permisos || !Array.isArray(usuario.Permisos)) {
+      return false;
+    }
+    
+    // Buscar si el usuario tiene el permiso requerido
+    const tieneElPermiso = usuario.Permisos.some(permiso => 
+      permiso.Nombre === permisoRequerido
+    );
+    
+    return tieneElPermiso;
+    
+  } catch (error) {
+    return false;
+  }
+};
+
+// Rutas públicas (accesibles sin autenticación)
+export const rutasPublicas = ["/", "/login", "/no-autorizado"];
 
 export default routes;
-
-// Rutas fuera del Dashboard (mantenidas automáticamente)
-export const rutasPublicas = ["/", "/login"];
