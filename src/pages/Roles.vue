@@ -134,7 +134,6 @@ export default {
                     Opcion: 1
                 })
                 .then(resp => {
-                    console.log(resp.data)
                     if (resp.data.length > 0) {
                         this.roles = resp.data
                     }
@@ -158,7 +157,6 @@ export default {
                 })
                 .then((resp) => {
                     const respuesta = resp.data;
-                    console.log(respuesta)
                     this.$vs.dialog({
                         type: 'alert',
                         color: respuesta.codigo === 0 ? '#009e32' : '#ff0055', // verde o rojo
