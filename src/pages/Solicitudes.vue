@@ -26,8 +26,9 @@
                         ]" :allow-reordering="false" />
                 <DxColumn width="auto" data-field="Nombre" data-type="string" alignment="center" />
                 <DxColumn width="auto" data-field="Apellido" data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="TipoUsuario" data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="DPI" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="Correo" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="Telefono" caption="Teléfono" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="CUI" data-type="string" alignment="center" />
             </DxDataGrid>
         </div>
     </card>
@@ -39,7 +40,8 @@
                     <DxItem caption="Información solicitud" item-type="group" :col-count="2">
                         <DxItem data-field="Nombre" editor-type="dxTextBox" />
                         <DxItem data-field="Apellido" editor-type="dxTextBox" />
-                        <DxItem data-field="DPI" editor-type="dxTextBox" />
+                        <DxItem data-field="CUI" editor-type="dxTextBox" />
+                        <DxItem data-field="Telefono" editor-type="dxTextBox" />
                         <!-- <DxItem data-field="TipoUsuario" editor-type="dxTextBox" /> -->
                     </DxItem>
                     <DxItem caption="Información usuario" item-type="group" :col-count="2">
@@ -53,9 +55,8 @@
                         <DxItem data-field="ApellidoUsuario" editor-type="dxTextBox">
                             <DxLabel text="Apellido" />
                         </DxItem>
-                        <DxItem data-field="DPIUsuario" editor-type="dxTextBox">
-                            <DxLabel text="DPI" />
-                        </DxItem>
+                        <DxItem data-field="CUIUsuario" editor-type="dxTextBox" />
+                        <DxItem data-field="TelefonoUsuario" editor-type="dxTextBox" />
                         <!-- <DxItem data-field="TipoUsuario" editor-type="dxTextBox" /> -->
                     </DxItem>
                 </DxGroupItem>
@@ -168,12 +169,10 @@ export default {
                 CUI: null,
                 Telefono: null,
                 Correo: null,
-                IdSolicitudCuenta: null,
                 NombreUsuario: null,
                 ApellidoUsuario: null,
-                DPIUsuario: null,
-                IdUsuario: null,
-                TipoUsuario: null
+                CUIUsuario: null,
+                TelefonoUsuario: null,
             },
 
             visualizarSolicitud: false,
@@ -191,33 +190,13 @@ export default {
                 }
             },
 
-            usuariosEncontrados: [],
-
-            usuarioEncontrado: {
-                Nombre: null,
-                Apellido: null,
-                DPI: null,
-            },
-
             rechazado: false, //Variable para saber cuando se rechazará una solicitud
 
             usuarioComponente: false, //Variable para saber cuando se mostrará el componente de buscar usuario
 
             rechazoSolicitud: {},
 
-            motivoRechazo: ['DPI incorrecto', 'No existe usuario con el registro indicado'],
-
-            posiblesUsuarios: [{
-                    id: 1,
-                    texto: 'Viudo',
-                    icono: 'fa-person-half-dress'
-                },
-                {
-                    id: 2,
-                    texto: 'Huefano',
-                    icono: 'fa-hands-holding-child'
-                }
-            ]
+            motivoRechazo: ['DPI incorrecto', 'No existe usuario con el CUI indicado']
         }
     },
     methods: {
@@ -227,9 +206,6 @@ export default {
                 })
                 .then(resp => {
                     this.solicitudes = resp.data
-                    // if (resp.data.length > 0) {
-                    //     this.solicitudes = resp.data
-                    // }
                 })
         },
 
@@ -241,12 +217,10 @@ export default {
                     Apellido: this.solicitudActiva.Apellido,
                     Correo: this.solicitudActiva.Correo,
                     Telefono: this.solicitudActiva.Telefono,
-                    DPI: this.solicitudActiva.DPI,
-                    Registro: this.solicitudActiva.Registro,
+                    CUI: this.solicitudActiva.CUI,
                     IdSolicitud: this.solicitudActiva.IdSolicitudCuenta,
                     Estado: estado,
                     MotivoRechazo: motivo,
-                    Usuarios: this.usuariosEncontrados
                 })
                 .then(resp => {
                     if (resp.data.length > 0) {
@@ -259,7 +233,18 @@ export default {
                                 color: '#ed8c72',
                                 title: 'Cuenta creada',
                                 acceptText: 'Aceptar',
-                                text: 'La cuenta ha sido creada para el CUI ' + this.solicitudActiva.DPI,
+                                text: 'La cuenta ha sido creada para el CUI ' + this.solicitudActiva.CUI,
+                                buttonCancel: 'border',
+                                accept: () => {},
+                            })
+                        }
+                        else{
+                            this.$vs.dialog({
+                                type: 'alert',
+                                color: '#ed8c72',
+                                title: 'Cuenta rechazada',
+                                acceptText: 'Aceptar',
+                                text: 'La cuenta ha sido rechazada con éxito.',
                                 buttonCancel: 'border',
                                 accept: () => {},
                             })
@@ -274,8 +259,7 @@ export default {
             // this.solicitudActiva = e
             this.solicitudActiva.Nombre = e.Nombre
             this.solicitudActiva.Apellido = e.Apellido
-            this.solicitudActiva.Registro = e.Registro
-            this.solicitudActiva.DPI = e.DPI
+            this.solicitudActiva.CUI = e.CUI
             this.solicitudActiva.IdSolicitudCuenta = e.IdSolicitudCuenta
             this.solicitudActiva.Telefono = e.Telefono
             this.solicitudActiva.Correo = e.Correo
@@ -287,24 +271,21 @@ export default {
         buscarUsuario() { // Realiza la búsqueda del usuario por medio del CUI de la solicitud seleccionada
             axios({
                     method: 'post',
-                    url: 'http://localhost:3000/api/Usuarios',
+                    url: 'http://localhost:3000/api/ObtenerPersona',
                     data: {
-                        Opcion: 2,
-                        Registro: this.solicitudActiva.Registro
+                        Opcion: 1,
+                        CUI: this.solicitudActiva.CUI
                     },
                 })
                 .then((resp) => {
                     if (resp.data.length > 0) {
 
-                        this.usuariosEncontrados = resp.data
-                        this.usuarioEncontrado = this.usuariosEncontrados[0] //Se deja con posición 0 por si trae más de 1 registro
+                        let usuarioEncontrado = resp.data[0]
 
-                        this.solicitudActiva.NombreUsuario = this.usuarioEncontrado.Nombre
-                        this.solicitudActiva.ApellidoUsuario = this.usuarioEncontrado.Apellido
-                        this.solicitudActiva.RegistroUsuario = this.usuarioEncontrado.Registro
-                        this.solicitudActiva.DPIUsuario = this.usuarioEncontrado.DPI
-                        this.solicitudActiva.IdUsuario = this.usuarioEncontrado.IdUsuario
-                        this.solicitudActiva.TipoUsuario = this.usuarioEncontrado.TipoUsuario
+                        this.solicitudActiva.NombreUsuario = usuarioEncontrado.nombres
+                        this.solicitudActiva.ApellidoUsuario = usuarioEncontrado.apellidos
+                        this.solicitudActiva.CUIUsuario = usuarioEncontrado.numero_dpi
+                        this.solicitudActiva.TelefonoUsuario = usuarioEncontrado.telefono
                     } else {
                         // MOSTRAR UN MENSAJE DE ERROR PARA QUE PUEDAN BUSCAR EL USUARIO
                     }
@@ -316,8 +297,7 @@ export default {
             this.solicitudActiva.NombreUsuario = e.Nombre
             this.solicitudActiva.ApellidoUsuario = e.Apellido
             this.solicitudActiva.RegistroUsuario = e.Registro
-            this.solicitudActiva.DPIUsuario = e.DPI
-            this.solicitudActiva.IdUsuario = e.IdUsuario
+            this.solicitudActiva.CUIUsuario = e.CUI
 
             this.usuarioComponente = false
         },
@@ -326,9 +306,6 @@ export default {
         this.cargarSolicitudes()
     },
     computed: {
-        multiplesUsuarios() {
-            return this.usuariosEncontrados.length > 1;
-        }
     }
 }
 </script>
