@@ -2,20 +2,20 @@
 <div>
     <card title="Usuarios">
         <div class="row p-2" style="display: grid; place-items: center;">
-            <DxDataGrid v-bind="DefaultDxGridConfiguration" :data-source="usuarios" :paging="{enabled: true}" :filter-sync-enabled="true" :headerFilter="{visible:false,allowSearch:true}" :searchPanel="{visible: true }" :height="'100%'" :width="'100%'" @row-dbl-click="seleccionarUsuario">
+            <DxDataGrid v-bind="DefaultDxGridConfiguration" :data-source="usuarios" :paging="{enabled: true, pageSize: 10}" :filter-sync-enabled="true" :headerFilter="{visible:false,allowSearch:true}" :searchPanel="{visible: true }" :height="'100%'" :width="'100%'" @row-dbl-click="seleccionarUsuario">
                 <DxSelection mode="single" />
 
-                <DxEditing :allow-updating="true" :allow-adding="true" :allow-deleting="true" mode="popup" :use-icons="true" :confirmDelete="true">
+                <!-- <DxEditing :allow-updating="true" :allow-adding="false" :allow-deleting="true" mode="popup" :use-icons="true" :confirmDelete="true">
                     <DxPopup :width="'60%'" height="auto" :show-title="true" :full-screen="false" :hide-on-outside-click="false" title="Usuario" :showCloseButton="true" />
-                </DxEditing>
+                </DxEditing> -->
 
-                <DxColumn width="auto" data-field="Nombre" data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="Apellido" data-type="string" alignment="center" />
-                <!-- <DxColumn width="auto" data-field="Correo" data-type="string" alignment="center" /> -->
-                <DxColumn width="auto" data-field="Registro" data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="Partida" data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="Plaza" data-type="string" alignment="center" />
-                <DxColumn width="auto" data-field="DPI" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="idpersona" caption="ID" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="nombres" caption="Nombres" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="apellidos" caption="Apellidos" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="registro" caption="Registro" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="partida" caption="Partida" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="plaza" caption="Plaza" data-type="string" alignment="center" />
+                <DxColumn width="auto" data-field="numero_dpi" caption="DPI" data-type="string" alignment="center" />
             </DxDataGrid>
         </div>
     </card>
@@ -61,9 +61,9 @@ export default {
         cargarUsuarios() {
             axios({
                     method: 'post',
-                    url: 'http://localhost:3000/api/Usuarios',
+                    url: 'http://localhost:3000/api/ObtenerPersonas',
                     data: {
-                        Opcion: 1,
+                        Opcion: 2,
                     },
                 })
                 .then((resp) => {

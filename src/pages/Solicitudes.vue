@@ -52,11 +52,15 @@
                         <DxItem data-field="NombreUsuario" editor-type="dxTextBox">
                             <DxLabel text="Nombre" />
                         </DxItem>
-                        <DxItem data-field="ApellidoUsuario" editor-type="dxTextBox">
+                        <DxItem data-field="ApellidoUsuario" caption="Apellido" editor-type="dxTextBox">
                             <DxLabel text="Apellido" />
                         </DxItem>
-                        <DxItem data-field="CUIUsuario" editor-type="dxTextBox" />
-                        <DxItem data-field="TelefonoUsuario" editor-type="dxTextBox" />
+                        <DxItem data-field="CUIUsuario" editor-type="dxTextBox">
+                            <DxLabel text="CUI" />
+                        </DxItem>
+                        <DxItem data-field="TelefonoUsuario" caption="Teléfono" editor-type="dxTextBox">
+                            <DxLabel text="Teléfono" />
+                        </DxItem>
                         <!-- <DxItem data-field="TipoUsuario" editor-type="dxTextBox" /> -->
                     </DxItem>
                 </DxGroupItem>
@@ -237,8 +241,7 @@ export default {
                                 buttonCancel: 'border',
                                 accept: () => {},
                             })
-                        }
-                        else{
+                        } else {
                             this.$vs.dialog({
                                 type: 'alert',
                                 color: '#ed8c72',
@@ -288,16 +291,26 @@ export default {
                         this.solicitudActiva.TelefonoUsuario = usuarioEncontrado.telefono
                     } else {
                         // MOSTRAR UN MENSAJE DE ERROR PARA QUE PUEDAN BUSCAR EL USUARIO
+                        this.$vs.dialog({
+                            type: 'alert',
+                            color: '#ed8c72',
+                            title: 'Usuario no encontrado',
+                            acceptText: 'Aceptar',
+                            text: 'No se encontró ningún usuario con el DPI ingresado .',
+                            buttonCancel: 'border',
+                            accept: () => {},
+                        })
                     }
                 });
 
         },
 
         seleccionarUsuario(e) {
-            this.solicitudActiva.NombreUsuario = e.Nombre
-            this.solicitudActiva.ApellidoUsuario = e.Apellido
-            this.solicitudActiva.RegistroUsuario = e.Registro
-            this.solicitudActiva.CUIUsuario = e.CUI
+            console.log(e)
+            this.solicitudActiva.NombreUsuario = e.nombres
+            this.solicitudActiva.ApellidoUsuario = e.apellidos
+            this.solicitudActiva.CUIUsuario = e.numero_dpi
+            this.solicitudActiva.TelefonoUsuario = e.telefono
 
             this.usuarioComponente = false
         },
@@ -305,8 +318,7 @@ export default {
     mounted() {
         this.cargarSolicitudes()
     },
-    computed: {
-    }
+    computed: {}
 }
 </script>
 
