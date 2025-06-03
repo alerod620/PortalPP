@@ -92,9 +92,7 @@ export default {
     data() {
         return {
             DefaultDxGridConfiguration,
-            formulario: {
-
-            },
+            formulario: {},
 
             visualizarModulo: false,
 
@@ -137,7 +135,7 @@ export default {
                     IdModulo: e.newData.IdModulo ? e.newData.IdModulo : e.oldData.IdModulo,
                     IdPermiso: e.oldData.IdPermiso
                 }).then((resp) => {
-                    resp.data[0].codigo == 0 ? resolve(false) : resolve(true)
+                    resp.data.codigo == 0 ? resolve(false) : resolve(true)
                 }).catch((err) => {
                     reject(err.descripcion ? err.descripcion : err)
                 })
@@ -150,7 +148,7 @@ export default {
                     Opcion: 4,
                     IdPermiso: e.data.IdPermiso
                 }).then((resp) => {
-                    resp.data[0].codigo == 0 ? resolve(false) : resolve(true)
+                    resp.data.codigo == 0 ? resolve(false) : resolve(true)
                 }).catch((err) => {
                     reject(err.descripcion ? err.descripcion : err)
                 })
