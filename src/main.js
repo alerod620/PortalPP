@@ -58,9 +58,43 @@ import { locale, loadMessages } from "devextreme/localization";
 import './assets/tailwind.css'
 
 
+
+
+// Configurar interceptor de axios
+axios.interceptors.response.use(
+  (response) => {
+    console.log(response)
+    // Si la respuesta tiene código 0, es exitosa
+    if (response.data && response.data.codigo === 0 && response.data.descripcion) {
+      Vue.prototype.$vs.notify({
+        color: 'success',
+        title: 'Éxito',
+        text: response.data.descripcion || 'Operación exitosa'
+      });
+    }
+    return response;
+  },
+  (error) => {
+    // Manejar errores
+    const responseData = error.response && error.response.data || {};
+    
+    Vue.prototype.$vs.notify({
+      color: 'danger',
+      title: 'Error',
+      text: responseData.descripcion || 'Ha ocurrido un error'
+    });
+    
+    return Promise.reject(error);
+  }
+);
+
+Vue.use(VueAxios, axios);
+
 Vue.use(PaperDashboard);
-Vue.use(Vuesax)
-Vue.use(VueAxios, axios)
+
+Vue.use(Vuesax, {
+  /* I will include options later */
+});
 
 /* eslint-disable no-new */
 new Vue({
@@ -69,7 +103,9 @@ new Vue({
 
   created()
   {
+    Vue.prototype.$vs = this.$vs
     loadMessages(esMessages);
     locale(navigator.language);
   },
 }).$mount("#app");
+
