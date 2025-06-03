@@ -11,10 +11,10 @@
                     <DxForm :form-data.sync="formulario" label-mode="floating" height="'100%'" :col-count="1">
                         <DxGroupItem :col-count="2">
                             <DxGroupItem>
-                                <DxItem data-field="NombrePermiso" editor-type="dxTextBox" />
-                                <DxItem data-field="IdModulo" editor-type="dxSelectBox" :editor-options="{ width: 'auto', searchEnabled: true, items: modulos,  displayExpr: 'Nombre', valueExpr: 'IdModulo' }" />
+                                <DxItem data-field="NombrePermiso" editor-type="dxTextBox" :validationRules="[{ type: 'required' }]" />
+                                <DxItem data-field="IdModulo" editor-type="dxSelectBox" :editor-options="{ width: 'auto', searchEnabled: true, items: modulos,  displayExpr: 'Nombre', valueExpr: 'IdModulo' }" :validationRules="[{ type: 'required' }]" />
                             </DxGroupItem>
-                            <DxItem data-field="Descripcion" editor-type="dxTextArea" :editor-options="{ height: '100px'}" />
+                            <DxItem data-field="Descripcion" editor-type="dxTextArea" :editor-options="{ height: '100px'}" :validationRules="[{ type: 'required' }]" />
                         </DxGroupItem>
                         <!-- <DxGroupItem>
                             <DxGroupItem>

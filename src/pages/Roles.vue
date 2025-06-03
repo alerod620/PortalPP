@@ -10,10 +10,10 @@
 
                     <DxForm :form-data.sync="formulario" label-mode="floating" height="'100%'" :col-count="1">
                         <DxGroupItem>
-                            <DxItem data-field="NombreRol" editor-type="dxTextBox">
+                            <DxItem data-field="NombreRol" editor-type="dxTextBox" :validationRules="[{ type: 'required' }]">
                                 <DxLabel test="Nombre" />
                             </DxItem>
-                            <DxItem data-field="Descripcion" editor-type="dxTextArea" :editor-options="{ height: '100px'}" />
+                            <DxItem data-field="Descripcion" editor-type="dxTextArea" :editor-options="{ height: '100px'}" :validationRules="[{ type: 'required' }]" />
                         </DxGroupItem>
                         <!-- <DxItem data-field="Permisos" template="lista" /> -->
                     </DxForm>
@@ -157,15 +157,15 @@ export default {
                 })
                 .then((resp) => {
                     const respuesta = resp.data;
-                    this.$vs.dialog({
-                        type: 'alert',
-                        color: respuesta.codigo === 0 ? '#009e32' : '#ff0055', // verde o rojo
-                        title: respuesta.codigo === 0 ? 'Éxito' : 'Error',
-                        acceptText: 'Aceptar',
-                        text: respuesta.mensaje,
-                        accept: () => {
-                        }
-                    });
+                    // this.$vs.dialog({
+                    //     type: 'alert',
+                    //     color: respuesta.codigo === 0 ? '#009e32' : '#ff0055', // verde o rojo
+                    //     title: respuesta.codigo === 0 ? 'Éxito' : 'Error',
+                    //     acceptText: 'Aceptar',
+                    //     text: respuesta.mensaje,
+                    //     accept: () => {
+                    //     }
+                    // });
                     this.cargarRol()
                 }).catch((err) => {
                     this.$vs.dialog({
@@ -173,7 +173,7 @@ export default {
                         color: '#ff0055',
                         title: 'Error del servidor',
                         acceptText: 'Aceptar',
-                        text: 'Ocurrió un error al intentar eliminar el rol.',
+                        text: 'Ocurrió un error al intentar agregar el rol.',
                         accept: () => {}
                     });
                 })
@@ -187,30 +187,7 @@ export default {
                     Descripcion: e.newData.Descripcion ? e.newData.Descripcion : e.oldData.Descripcion,
                     Id: e.oldData.IdRol
                 }).then((resp) => {
-                    if (resp.data.codigo == 0) {
-                        this.$vs.dialog({
-                            type: 'alert',
-                            color: '#009e32',
-                            title: 'Rol actualizado',
-                            acceptText: 'Aceptar',
-                            text: resp.data.mensaje,
-                            buttonCancel: 'border',
-                            accept: () => {},
-                        })
-                        resolve(false)
-                    } else {
-                        this.$vs.dialog({
-                            type: 'alert',
-                            color: '#ff0055',
-                            title: 'Error',
-                            acceptText: 'Aceptar',
-                            text: resp.data.mensaje,
-                            buttonCancel: 'border',
-                            accept: () => {},
-                        })
-                        resolve(true)
-                    }
-                    // resp.data.codigo == 0 ? resolve(false) : resolve(true)
+                    resp.data.codigo == 0 ? resolve(false) : resolve(true)
                 }).catch((err) => {
                     console.error(err);
                 })
@@ -223,29 +200,9 @@ export default {
                     Opcion: 4,
                     Id: e.data.IdRol
                 }).then((resp) => {
-                    const respuesta = resp.data;
-                    this.$vs.dialog({
-                        type: 'alert',
-                        color: respuesta.codigo === 0 ? '#009e32' : '#ff0055', // verde o rojo
-                        title: respuesta.codigo === 0 ? 'Éxito' : 'Error',
-                        acceptText: 'Aceptar',
-                        text: respuesta.mensaje,
-                        accept: () => {}
-                    });
-                    this.cargarRol()
-
-                    // Si el código es 0, no se cancela la eliminación
-                    resolve(respuesta.codigo === 0);
+                    resp.data.codigo == 0 ? resolve(false) : resolve(true)
                 }).catch((err) => {
-                    this.$vs.dialog({
-                        type: 'alert',
-                        color: '#ff0055',
-                        title: 'Error del servidor',
-                        acceptText: 'Aceptar',
-                        text: 'Ocurrió un error al intentar eliminar el rol.',
-                        accept: () => {}
-                    });
-                    resolve(false);
+                    reject(err.descripcion ? err.descripcion : err)
                 })
             })
         },
@@ -302,14 +259,6 @@ export default {
                 })
                 .then((resp) => {
                     const respuesta = resp.data;
-                    this.$vs.dialog({
-                        type: 'alert',
-                        color: respuesta.codigo === 0 ? '#009e32' : '#ff0055', // verde o rojo
-                        title: respuesta.codigo === 0 ? 'Éxito' : 'Error',
-                        acceptText: 'Aceptar',
-                        text: respuesta.mensaje,
-                        accept: () => {}
-                    });
 
                     this.visualizarPermisos = false
                 }).catch((err) => {
