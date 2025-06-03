@@ -11,8 +11,8 @@
                     <DxForm :form-data.sync="formulario" label-mode="floating" height="'100%'" :col-count="1">
                         <DxGroupItem :col-count="2">
                             <DxGroupItem>
-                                <DxItem data-field="Nombre" editor-type="dxTextBox" />
-                                <DxItem data-field="Modulo" editor-type="dxSelectBox" :editor-options="{ width: 'auto', searchEnabled: true, items: modulos,  displayExpr: 'Nombre', valueExpr: 'IdModulo' }" />
+                                <DxItem data-field="NombrePermiso" editor-type="dxTextBox" />
+                                <DxItem data-field="IdModulo" editor-type="dxSelectBox" :editor-options="{ width: 'auto', searchEnabled: true, items: modulos,  displayExpr: 'Nombre', valueExpr: 'IdModulo' }" />
                             </DxGroupItem>
                             <DxItem data-field="Descripcion" editor-type="dxTextArea" :editor-options="{ height: '100px'}" />
                         </DxGroupItem>
@@ -31,13 +31,14 @@
                     <DxButton name="edit" />
                 </DxColumn>
                 <DxColumn width="auto" data-field="IdPermiso" caption="Id" data-type="string" alignment="center" :form-item="{ visible: false }" />
-                <DxColumn width="auto" data-field="NombrePermiso" caption="Nombre" data-type="string" alignment="center" :form-item="{ visible: false }" />
+                <DxColumn width="auto" data-field="IdModulo" caption="Módulo" data-type="string" alignment="center" :visible="false"  />
+                <DxColumn width="auto" data-field="NombrePermiso" caption="Nombre" data-type="string" alignment="center"  />
                 <DxColumn width="auto" data-field="NombreModulo" caption="Módulo" data-type="string" alignment="center" :form-item="{ visible: false }" />
                 <DxColumn width="auto" data-field="Descripcion" caption="Descripción" data-type="string" alignment="center" />
 
                 <!-- Se agregan estas dos columnas y se deja ocultas para que al momento de crear un nuevo permiso, el formulario tome los vales para la petición -->
-                <DxColumn width="auto" data-field="Nombre" data-type="string" alignment="center" :visible="false" />
-                <DxColumn width="auto" data-field="Modulo" data-type="number" alignment="center" :visible="false" />
+                <!-- <DxColumn width="auto" data-field="Nombre" data-type="string" alignment="center" :visible="false" />
+                <DxColumn width="auto" data-field="Modulo" data-type="number" alignment="center" :visible="false" /> -->
             </DxDataGrid>
         </div>
     </card>
@@ -91,7 +92,9 @@ export default {
     data() {
         return {
             DefaultDxGridConfiguration,
-            formulario: {},
+            formulario: {
+
+            },
 
             visualizarModulo: false,
 
@@ -114,13 +117,13 @@ export default {
         crearPermiso(e) {
             axios.post('http://localhost:3000/api/Permisos', {
                     Opcion: 2,
-                    Nombre: e.data.Nombre,
+                    Nombre: e.data.NombrePermiso,
                     Descripcion: e.data.Descripcion,
-                    IdModulo: e.data.Modulo
+                    IdModulo: e.data.IdModulo
                 })
                 .then(resp => {
-                    if (resp.data.length > 0) {
-                        this.permisos = resp.data
+                    if (resp.data.codigo == 0) {
+
                     }
                 })
         },
@@ -129,9 +132,10 @@ export default {
             e.cancel = new Promise((resolve, reject) => {
                 this.axios.post('http://localhost:3000/api/Permisos', {
                     Opcion: 3,
-                    Nombre: e.newData.NombreRol ? e.newData.NombreRol : e.oldData.NombreRol,
+                    Nombre: e.newData.NombrePermiso ? e.newData.NombrePermiso : e.oldData.NombrePermiso,
                     Descripcion: e.newData.Descripcion ? e.newData.Descripcion : e.oldData.Descripcion,
-                    Id: e.oldData.IdRol
+                    IdModulo: e.newData.IdModulo ? e.newData.IdModulo : e.oldData.IdModulo,
+                    IdPermiso: e.oldData.IdPermiso
                 }).then((resp) => {
                     resp.data[0].codigo == 0 ? resolve(false) : resolve(true)
                 }).catch((err) => {
@@ -144,7 +148,7 @@ export default {
             e.cancel = new Promise((resolve, reject) => {
                 this.axios.post('http://localhost:3000/api/Permisos', {
                     Opcion: 4,
-                    Id: e.data.IdRol
+                    IdPermiso: e.data.IdPermiso
                 }).then((resp) => {
                     resp.data[0].codigo == 0 ? resolve(false) : resolve(true)
                 }).catch((err) => {
