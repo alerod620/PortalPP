@@ -37,4 +37,18 @@ export default {};
     transform: scale(1.2, 0.7);
   }
 }
+
+/* Botón GUARDAR */
+.dx-datagrid-edit-popup .dx-popup-bottom .dx-button[aria-label="Guardar"] {
+  background-color: #28a745 !important;
+  color: white !important;
+  border-radius: 5px;
+}
+
+/* Botón CANCELAR */
+.dx-datagrid-edit-popup .dx-popup-bottom .dx-button[aria-label="Cancelar"] {
+  background-color: #ea0017 !important;
+  color: white !important;
+  border-radius: 5px;
+}
 </style>

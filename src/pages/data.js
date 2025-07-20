@@ -26,7 +26,6 @@ export const DefaultDxGridConfiguration = {
     showScrollbar: 'always',
     useNative: false,
   },
-    
 }
 
 export function validarTelefonoFijo(e) {

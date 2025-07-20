@@ -306,7 +306,6 @@ export default {
         },
 
         seleccionarUsuario(e) {
-            console.log(e)
             this.solicitudActiva.NombreUsuario = e.nombres
             this.solicitudActiva.ApellidoUsuario = e.apellidos
             this.solicitudActiva.CUIUsuario = e.numero_dpi

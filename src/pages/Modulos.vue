@@ -32,6 +32,7 @@
                 <DxColumn width="100px" data-field="Ruta" data-type="string" alignment="center" />
                 <DxColumn width="100px" data-field="Icono" data-type="string" alignment="center" />
                 <DxColumn width="100px" data-field="EstadoDescripcion" caption="Estado" data-type="string" alignment="center" />
+                <DxColumn width="100px" data-field="Estado" caption="Estado" data-type="string" alignment="center" :visible="false" />
                 <DxColumn width="auto" data-field="Descripcion" caption="Descripción" data-type="string" alignment="left" />
             </DxDataGrid>
         </div>
@@ -168,9 +169,9 @@ export default {
             this.mostrarEstado = false
         },
 
-        onEditarRegistro(e)
-        {
+        onEditarRegistro(e) {
             this.mostrarEstado = true
+            // this.formulario = e.data
         }
     },
     mounted() {
